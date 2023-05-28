@@ -329,7 +329,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.2
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -908,8 +908,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_AnchoredPosition: {x: 5.272, y: 0}
+  m_SizeDelta: {x: 20.5439, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &782483616
 MonoBehaviour:
@@ -1396,7 +1396,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000003159, y: 399}
+  m_AnchoredPosition: {x: -4, y: 434}
   m_SizeDelta: {x: 623.45, y: 106.4854}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1153441177
@@ -1432,7 +1432,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "O que o seguinte gr\xE1fico de ECG indica?"
+  m_Text: Qual a anormalidade no ECG abaixo?
 --- !u!222 &1153441178
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1511,7 +1511,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Bloqueio de ramo esquerdo.
+  m_Text: "Presen\xE7a de supradesnivelamento do segmento  ST ."
 --- !u!222 &1155077191
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1669,7 +1669,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Infarto agudo do mioc\xE1rdio."
+  m_Text: "Onda QRS com orienta\xE7\xE3o e dura\xE7\xE3o anormal indicando sobrecarga
+    de VE."
 --- !u!222 &1281509996
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2043,7 +2044,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Second Question
+          m_StringArgument: Results
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1425605851
@@ -2252,8 +2253,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 179.5}
-  m_SizeDelta: {x: 535, y: 291}
+  m_AnchoredPosition: {x: -4, y: 196.34}
+  m_SizeDelta: {x: 585.71, y: 292.69}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1656617456
 MonoBehaviour:
@@ -2275,7 +2276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f0b2bca9c0f693043a843205ae72829c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 95a3af42ccb3f2442bfd0560f93d8d23, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2363,7 +2364,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1 / 5
+  m_Text: 5 / 5
 --- !u!222 &1687870859
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2442,7 +2443,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ritmo sinusal normal.
+  m_Text: Intervalo PR anormal.
 --- !u!222 &1713384740
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2796,7 +2797,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Fibrila\xE7\xE3o atrial."
+  m_Text: "Presen\xE7a de invers\xE3o da onda T na deriva\xE7\xE3o I."
 --- !u!222 &2116324665
 CanvasRenderer:
   m_ObjectHideFlags: 0
