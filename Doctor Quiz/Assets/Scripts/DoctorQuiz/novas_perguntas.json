@@ -2,6 +2,7 @@
   "questions": [
     {
       "questionText": "Qual é a principal finalidade de um eletrocardiograma?",
+      "questionImage": "../../Images/img_Enunciado",
       "options": [
         "Medir a pressão arterial",
         "Detectar problemas respiratórios",
@@ -12,6 +13,7 @@
     },
     {
       "questionText": "Qual é o significado da sigla ECG?",
+      "questionImage": "",
       "options": [
         "Eletrocardiograma",
         "Exame de Cérebro Geral",
@@ -19,36 +21,6 @@
         "Estudo de Contração Gástrica"
       ],
       "correctOptionIndex": 0
-    },
-    {
-      "questionText": "Qual é o nome da onda que representa a despolarização dos átrios no eletrocardiograma?",
-      "options": [
-        "Onda P",
-        "Onda Q",
-        "Onda R",
-        "Onda T"
-      ],
-      "correctOptionIndex": 0
-    },
-    {
-      "questionText": "O que significa uma alteração no segmento ST no eletrocardiograma?",
-      "options": [
-        "Arritmia cardíaca",
-        "Infarto do miocárdio",
-        "Hipertensão arterial",
-        "Fibrilação ventricular"
-      ],
-      "correctOptionIndex": 1
-    },
-    {
-      "questionText": "Qual é a duração aproximada de um ciclo cardíaco normal registrado em um eletrocardiograma?",
-      "options": [
-        "0,04 segundos",
-        "0,10 segundos",
-        "0,20 segundos",
-        "0,40 segundos"
-      ],
-      "correctOptionIndex": 1
     }
   ]
 }

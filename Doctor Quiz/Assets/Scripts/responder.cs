@@ -66,9 +66,26 @@ public class responder : MonoBehaviour
     {
         // Verifica se ainda existem perguntas na lista
         if (questions.Count > 0)
-        {
+        {   
+            // Check if the question has an image
+            string imageCaminho = "Assets/Images" + currentQuestion.imagePath;
+            questionImage.sprite = Resources.Load<Sprite>(imagePath);
+            if (!string.IsNullOrEmpty(currentQuestion.imagePath))
+            {
+                // Enable image display
+                questionImage.gameObject.SetActive(true);
+                // Load the image using the imagePath (can be a URL, local path, etc.)
+                // questionImage.sprite = LoadImage(currentQuestion.imagePath);
+            }
+            else
+            {
+                // Disable image display
+                questionImage.gameObject.SetActive(false);
+            }
+
             // Obtém a primeira pergunta da lista
             currentQuestion = questions[0];
+            questionText.text = currentQuestion.questionText;
 
             // Atualiza o texto da pergunta na interface do usuário
             questionText.text = currentQuestion.questionText;
