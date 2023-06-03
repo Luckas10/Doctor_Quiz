@@ -1,26 +1,37 @@
 {
   "questions": [
     {
-      "questionText": "Qual é a principal finalidade de um eletrocardiograma?",
-      "questionImage": "../../Images/img_Enunciado",
+      "questionText": "O que significa o segmento ST em um ECG?",
+      "questionImage": "../Images/image.jpg",
       "options": [
-        "Medir a pressão arterial",
-        "Detectar problemas respiratórios",
-        "Avaliar a função do coração",
-        "Diagnosticar doenças gastrointestinais"
+        "Segmento de Taquicardia",
+        "Segmento de Tendência",
+        "Segmento de Tristeza",
+        "Segmento de ST"
       ],
-      "correctOptionIndex": 2
+      "correctOptionIndex": 3
     },
     {
-      "questionText": "Qual é o significado da sigla ECG?",
-      "questionImage": "",
+      "questionText": "Qual é a principal alteração do ECG associada à isquemia cardíaca?",
+      "questionImage": "../Images/image.jpg",
       "options": [
-        "Eletrocardiograma",
-        "Exame de Cérebro Geral",
-        "Ecografia Coronariana",
-        "Estudo de Contração Gástrica"
+        "Elevação do segmento ST",
+        "Aumento da amplitude da onda P",
+        "Diminuição do intervalo PR",
+        "Aumento da duração do complexo QRS"
       ],
       "correctOptionIndex": 0
+    },
+    {
+      "questionText": "O que indica um intervalo PR prolongado no ECG?",
+      "questionImage": "../Images/image.jpg",
+      "options": [
+        "Bloqueio do ramo direito",
+        "Bloqueio do ramo esquerdo",
+        "Bloqueio atrioventricular de primeiro grau",
+        "Bloqueio atrioventricular de segundo grau"
+      ],
+      "correctOptionIndex": 2
     }
   ]
 }
