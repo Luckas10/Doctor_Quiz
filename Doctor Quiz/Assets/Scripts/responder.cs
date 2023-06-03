@@ -13,8 +13,11 @@ public class Responder : MonoBehaviour
     private List<Question> questions;
     private Question currentQuestion;
 
+    private string imageDirectoryPath;
+
     private void Start()
     {
+        imageDirectoryPath = Path.Combine(Application.dataPath, "DoctorQuiz", "Assets", "Images");
         LoadQuestionsFromJSON();
         ShuffleQuestions();
         DisplayQuestion();
@@ -24,8 +27,7 @@ public class Responder : MonoBehaviour
     private void LoadQuestionsFromJSON()
     {
         // Caminho do arquivo JSON contendo as perguntas
-        string directoryPath = Path.Combine(Application.dataPath, "DoctorQuiz");
-        string filePath = Path.Combine(directoryPath, "novas_perguntas.json");
+        string filePath = Path.Combine(Application.dataPath, "DoctorQuiz", "novas_perguntas.json");
 
         // Verifica se o arquivo existe
         if (File.Exists(filePath))
@@ -87,8 +89,7 @@ public class Responder : MonoBehaviour
                 questionImage.gameObject.SetActive(true);
 
                 // Carrega a imagem usando o caminho da imagem (pode ser um URL, caminho local, etc.)
-                string imagePath = Path.Combine(Application.dataPath, "DoctorQuiz", "Assets", "Images", currentQuestion.questionImage);
-                LoadImage(imagePath);
+                LoadImage(currentQuestion.questionImage);
             }
             else
             {
@@ -105,13 +106,29 @@ public class Responder : MonoBehaviour
     }
 
     // Carrega uma imagem
-    private void LoadImage(string imagePath)
+    private void LoadImage(string imageName)
     {
-        // Carrega a textura da imagem
-        Texture2D texture = Resources.Load<Texture2D>(imagePath);
+        // Constrói o caminho completo para a imagem usando o diretório base e o nome do arquivo
+        string imagePath = Path.Combine(imageDirectoryPath, imageName);
 
-        // Cria um sprite com base na textura e atribui ao componente de imagem
-        questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        // Verifica se o arquivo da imagem existe
+        if (File.Exists(imagePath))
+        {
+            // Lê os bytes do arquivo da imagem
+            byte[] imageData = File.ReadAllBytes(imagePath);
+
+            // Cria uma textura e carrega os bytes da imagem
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(imageData);
+
+            // Cria um sprite com base na textura e atribui ao componente de imagem
+            questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        }
+        else
+        {
+            // Exibe uma mensagem de erro caso o arquivo da imagem não seja encontrado
+            Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
+        }
     }
 
     // Verifica a resposta selecionada pelo jogador
@@ -146,7 +163,7 @@ public class Responder : MonoBehaviour
     public class Question
     {
         public string questionText;                // Texto da pergunta
-        public string questionImage;               // Caminho da imagem da pergunta
+        public string questionImage;               // Nome do arquivo da imagem da pergunta
         public List<string> options;               // Lista de opções de resposta
         public int correctOptionIndex;             // Índice da opção correta na lista de opções
     }
