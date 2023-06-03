@@ -17,7 +17,7 @@ public class Responder : MonoBehaviour
 
     private void Start()
     {
-        imageDirectoryPath = Path.Combine(Application.dataPath,"Scripts", "DoctorQuiz", "Assets", "Images");
+        imageDirectoryPath = Path.Combine(Application.dataPath, "DoctorQuiz", "Assets", "Images");
         LoadQuestionsFromJSON();
         ShuffleQuestions();
         DisplayQuestion();
@@ -27,7 +27,7 @@ public class Responder : MonoBehaviour
     private void LoadQuestionsFromJSON()
     {
         // Caminho do arquivo JSON contendo as perguntas
-        string filePath = Path.Combine(Application.dataPath, "DoctorQuiz", "novas_perguntas.json");
+        string filePath = Path.Combine(Application.dataPath, "Scripts", "DoctorQuiz", "novas_perguntas.json");
 
         // Verifica se o arquivo existe
         if (File.Exists(filePath))
