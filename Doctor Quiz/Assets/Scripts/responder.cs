@@ -17,7 +17,7 @@ public class Responder : MonoBehaviour
 
     private void Start()
     {
-        imageDirectoryPath = Path.Combine(Application.dataPath, "DoctorQuiz", "Assets", "Images");
+        imageDirectoryPath = Path.Combine(Application.dataPath,"Scripts", "DoctorQuiz", "Assets", "Images");
         LoadQuestionsFromJSON();
         ShuffleQuestions();
         DisplayQuestion();
