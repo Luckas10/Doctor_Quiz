@@ -2,7 +2,7 @@
   "questions": [
     {
       "questionText": "O que significa o segmento ST em um ECG?",
-      "questionImage": "../Images/img_Enunciado.jpg",
+      "questionImage": "Assets/Images/img_Enunciado.png",
       "options": [
         "Segmento de Taquicardia",
         "Segmento de Tendência",
@@ -13,7 +13,7 @@
     },
     {
       "questionText": "Qual é a principal alteração do ECG associada à isquemia cardíaca?",
-      "questionImage": "../Images/img_Enunciado.jpg",
+      "questionImage": "Assets/Images/img_Enunciado.png",
       "options": [
         "Elevação do segmento ST",
         "Aumento da amplitude da onda P",
@@ -24,7 +24,7 @@
     },
     {
       "questionText": "O que indica um intervalo PR prolongado no ECG?",
-      "questionImage": "../Images/img_Enunciado.jpg",
+      "questionImage": "Assets/Images/img_Enunciado.png",
       "options": [
         "Bloqueio do ramo direito",
         "Bloqueio do ramo esquerdo",

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-public class Responder : MonoBehaviour
+public class responder : MonoBehaviour
 {
     public Text questionText;
     public Image questionImage;
@@ -17,7 +17,7 @@ public class Responder : MonoBehaviour
 
     private void Start()
     {
-        imageDirectoryPath = Path.Combine(Application.dataPath, "DoctorQuiz", "Assets", "Images");
+        imageDirectoryPath = Path.Combine(Application.dataPath, "Doctor Quiz", "Assets", "Images");
         LoadQuestionsFromJSON();
         ShuffleQuestions();
         DisplayQuestion();
@@ -109,7 +109,7 @@ public class Responder : MonoBehaviour
     private void LoadImage(string imageName)
     {
         // Constrói o caminho completo para a imagem usando o diretório base e o nome do arquivo
-        string imagePath = Path.Combine(imageDirectoryPath, imageName);
+        string imagePath = Path.Combine(imageName);
 
         // Verifica se o arquivo da imagem existe
         if (File.Exists(imagePath))
