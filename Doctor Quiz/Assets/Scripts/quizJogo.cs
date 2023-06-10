@@ -12,7 +12,7 @@ public class quizJogo : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         btnContinuar.interactable = false;
     }

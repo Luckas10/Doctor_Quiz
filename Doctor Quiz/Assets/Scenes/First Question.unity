@@ -1082,6 +1082,7 @@ MonoBehaviour:
   - {fileID: 632746512}
   - {fileID: 1502746185}
   - {fileID: 709453550}
+  confirmButton: {fileID: 1425605850}
 --- !u!1 &863951619
 GameObject:
   m_ObjectHideFlags: 0
@@ -2063,7 +2064,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Second Question
+          m_StringArgument: First Question
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1425605851
@@ -2295,7 +2296,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f0b2bca9c0f693043a843205ae72829c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3ab8c896293cf1745a591d896c2f133c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
