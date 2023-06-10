@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class responder : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class responder : MonoBehaviour
 
     // Índice da opção selecionada
     private int selectedOptionIndex = -1;
-
+    
     private void Start()
     {
         imageDirectoryPath = Path.Combine(Application.dataPath);
@@ -33,6 +34,7 @@ public class responder : MonoBehaviour
         if (selectedOptionIndex != -1)
         {
             CheckAnswer(selectedOptionIndex);
+            
             // Redefine o índice da opção selecionada para o valor inicial
             selectedOptionIndex = -1;
         }
@@ -176,7 +178,7 @@ public class responder : MonoBehaviour
         }
 
         // Remova a pergunta atual da lista, avançando para a próxima pergunta
-        questions.RemoveAt(0);
+        RemoveQuestionFromJSON();
 
         // Verifica se ainda existem perguntas na lista
         if (questions.Count > 0)
@@ -187,8 +189,38 @@ public class responder : MonoBehaviour
         else
         {
             Debug.Log("Quiz concluído!");
+
+            // Carrega a cena "Results"
+            SceneManager.LoadScene("Results");
         }
     }
+
+    private void RemoveQuestionFromJSON()
+    {
+        // Verifica se o índice da pergunta é válido
+        if (0 < questions.Count)
+        {
+            // Remove a pergunta da lista pelo índice
+            questions.RemoveAt(0);
+
+            // Converte a lista de perguntas atualizada em JSON
+            QuestionList questionList = new QuestionList { questions = questions };
+            string json = JsonUtility.ToJson(questionList, true);
+
+            // Caminho do arquivo JSON contendo as perguntas
+            string filePath = Path.Combine(Application.dataPath, "Scripts", "DoctorQuiz", "novas_perguntas.json");
+
+            // Salva o JSON atualizado no arquivo
+            File.WriteAllText(filePath, json);
+
+            Debug.Log("Pergunta removida do arquivo JSON.");
+        }
+        else
+        {
+            Debug.LogError("Índice de pergunta inválido");
+        }
+    }
+
 
     [System.Serializable]
     public class Question
