@@ -56,7 +56,9 @@ public class responder : MonoBehaviour
         {               Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
         }
     }
-        void SetQuestion()
+
+
+    void SetQuestion()
     {
         if (questionsShown.Count < questions.Count)
         {
