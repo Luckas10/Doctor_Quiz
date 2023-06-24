@@ -32,6 +32,17 @@
         "Bloqueio atrioventricular de segundo grau"
       ],
       "correctOptionIndex": "Bloqueio atrioventricular de primeiro grau"
+    },
+    {
+      "questionText": "O que o gráfico desse ECG indica?",
+      "questionImage": "Images/img_enunciado4.png",
+      "options": [
+        "Taquicardia supraventricular",
+        "Ritmo sinusal normal",
+        "Taquicardia Ventricular",
+        "Fibrilação atrial"
+      ],
+      "correctOptionIndex": "Fibrilação atrial"
     }
   ]
 }

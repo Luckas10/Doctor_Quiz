@@ -11,7 +11,10 @@ public class responder : MonoBehaviour
     public Image questionImage;
     public List<Button> optionButtons;
     public Button confirmButton;
-
+    public Text txtProgress;
+    public Slider progressLevel;
+    
+    private static float valueProgressLevel = 0.0f;
     private List<Question> questions;
     private Question currentQuestion;
     public static int correctQuestions;
@@ -23,7 +26,6 @@ public class responder : MonoBehaviour
 
     void Start()
     {
-
         imageDirectoryPath = Path.Combine(Application.dataPath);
         path = Path.Combine(Application.dataPath, "Scripts", "DoctorQuiz", "novas_perguntas.json");
         LoadQuestions();
@@ -64,7 +66,8 @@ public class responder : MonoBehaviour
 
     void SetQuestion()
     {
-
+        txtProgress.text = (questionsAnswered + 1).ToString() + " / " + questions.Count.ToString();
+        progressLevel.value = valueProgressLevel;
         if (questionsShown.Count < questions.Count)
         {
             // Seleciona uma questão aleatória que ainda não foi mostrada
@@ -136,6 +139,7 @@ public class responder : MonoBehaviour
                 Debug.Log("Resposta incorreta!");
             }
             questionsAnswered++;
+            valueProgressLevel += 1.0f / questions.Count;
             Debug.Log("questões respondidas ConfirmAnswer: "+ questionsAnswered);
             if (questionsAnswered == questions.Count)
             {
