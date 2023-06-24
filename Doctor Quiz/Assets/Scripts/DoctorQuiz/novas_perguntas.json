@@ -9,7 +9,7 @@
         "Segmento de Tristeza",
         "Segmento de ST"
       ],
-      "correctOptionIndex": 3
+      "correctOptionIndex": "Segmento de ST"
     },
     {
       "questionText": "Qual é a principal alteração do ECG associada à isquemia cardíaca?",
@@ -20,7 +20,7 @@
         "Diminuição do intervalo PR",
         "Aumento da duração do complexo QRS"
       ],
-      "correctOptionIndex": 0
+      "correctOptionIndex": "Elevação do segmento ST"
     },
     {
       "questionText": "O que indica um intervalo PR prolongado no ECG?",
@@ -31,7 +31,7 @@
         "Bloqueio atrioventricular de primeiro grau",
         "Bloqueio atrioventricular de segundo grau"
       ],
-      "correctOptionIndex": 2
+      "correctOptionIndex": "Bloqueio atrioventricular de primeiro grau"
     }
   ]
 }

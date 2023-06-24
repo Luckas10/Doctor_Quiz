@@ -311,7 +311,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -3.1796265}
+  m_AnchoredPosition: {x: 0, y: -3.1795654}
   m_SizeDelta: {x: 0, y: -100.2827}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &508105393
@@ -447,6 +447,7 @@ GameObject:
   - component: {fileID: 783325096}
   - component: {fileID: 783325095}
   - component: {fileID: 783325094}
+  - component: {fileID: 783325098}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -545,6 +546,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &783325098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 783325093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87e78e2cce198f4d9d7b499cf3b3008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questionsCorrectText: {fileID: 2143837537}
+  samples: {fileID: 1570313901}
 --- !u!1 &862268083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1248,7 +1263,7 @@ GameObject:
   - component: {fileID: 1570313902}
   - component: {fileID: 1570313901}
   m_Layer: 5
-  m_Name: txtQuantRespostas
+  m_Name: txtSamples
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

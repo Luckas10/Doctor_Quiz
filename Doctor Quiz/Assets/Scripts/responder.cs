@@ -14,6 +14,7 @@ public class responder : MonoBehaviour
 
     private List<Question> questions;
     private Question currentQuestion;
+    public static int correctQuestions;
 
     private string path;
     private string imageDirectoryPath;
@@ -61,73 +62,74 @@ public class responder : MonoBehaviour
     }
 
 
-void SetQuestion()
-{
-
-    if (questionsShown.Count < questions.Count)
+    void SetQuestion()
     {
-        // Seleciona uma questão aleatória que ainda não foi mostrada
-        List<Question> remainingQuestions = questions.Except(questionsShown).ToList();
-        int randomIndex = Random.Range(0, remainingQuestions.Count);
-        currentQuestion = remainingQuestions[randomIndex];
-        questionsShown.Add(currentQuestion);
 
-        // Exibe a pergunta e a imagem, se houver
-        questionText.text = currentQuestion.questionText;
-        if (!string.IsNullOrEmpty(currentQuestion.questionImage))
+        if (questionsShown.Count < questions.Count)
         {
-            LoadImage(currentQuestion.questionImage);
-            questionImage.gameObject.SetActive(true);
-        }
-        else
-        {
-            questionImage.gameObject.SetActive(false);
-        }
+            // Seleciona uma questão aleatória que ainda não foi mostrada
+            List<Question> remainingQuestions = questions.Except(questionsShown).ToList();
+            int randomIndex = Random.Range(0, remainingQuestions.Count);
+            currentQuestion = remainingQuestions[randomIndex];
+            questionsShown.Add(currentQuestion);
 
-        // Embaralha as opções e define o texto dos botões de opção
-        List<string> options = currentQuestion.options.ToList();
-        options = options.OrderBy(option => Random.value).ToList();
-        int selectedOptionIndex = -1;
-
-        for (int i = 0; i < optionButtons.Count; i++)
-        {
-            int optionIndex = i;
-            optionButtons[optionIndex].GetComponentInChildren<Text>().text = options[optionIndex];
-
-            // Remove todos os listeners do botão de opção
-            optionButtons[optionIndex].onClick.RemoveAllListeners();
-
-            // Adiciona um listener que armazena o índice da opção selecionada na variável selectedOptionIndex
-            optionButtons[optionIndex].onClick.AddListener(() =>
+            // Exibe a pergunta e a imagem, se houver
+            questionText.text = currentQuestion.questionText;
+            if (!string.IsNullOrEmpty(currentQuestion.questionImage))
             {
-                selectedOptionIndex = optionIndex;
-                confirmButton.interactable = true;
+                LoadImage(currentQuestion.questionImage);
+                questionImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                questionImage.gameObject.SetActive(false);
+            }
+
+            // Embaralha as opções e define o texto dos botões de opção
+            List<string> options = currentQuestion.options.ToList();
+            options = options.OrderBy(option => Random.value).ToList();
+            int selectedOptionIndex = -1;
+
+            for (int i = 0; i < optionButtons.Count; i++)
+            {
+                int optionIndex = i;
+                optionButtons[optionIndex].GetComponentInChildren<Text>().text = options[optionIndex];
+
+                // Remove todos os listeners do botão de opção
+                optionButtons[optionIndex].onClick.RemoveAllListeners();
+
+                // Adiciona um listener que armazena o índice da opção selecionada na variável selectedOptionIndex
+                optionButtons[optionIndex].onClick.AddListener(() =>
+                {
+                    selectedOptionIndex = optionIndex;
+                    confirmButton.interactable = true;
+                });
+            }
+
+
+            // Remove todos os listeners do botão de confirmação
+            confirmButton.onClick.RemoveAllListeners();
+
+            // Adiciona um único listener que chama a função ConfirmAnswer() com o índice da opção selecionada
+            confirmButton.onClick.AddListener(() =>
+            {
+                ConfirmAnswer(selectedOptionIndex, options[selectedOptionIndex]);
             });
+
+            // Desabilita o botão de confirmação até que uma opção seja selecionada
+            confirmButton.interactable = false;
         }
-
-
-        // Remove todos os listeners do botão de confirmação
-        confirmButton.onClick.RemoveAllListeners();
-
-        // Adiciona um único listener que chama a função ConfirmAnswer() com o índice da opção selecionada
-        confirmButton.onClick.AddListener(() =>
-        {
-            ConfirmAnswer(selectedOptionIndex);
-        });
-
-        // Desabilita o botão de confirmação até que uma opção seja selecionada
-        confirmButton.interactable = false;
     }
-}
 
 
 
-    void ConfirmAnswer(int index)
+    void ConfirmAnswer(int index, string textoSelected)
     {
         if (index != -1){
-            if (index == currentQuestion.correctOptionIndex)
+            if (textoSelected == currentQuestion.correctOptionIndex)
             {
                 Debug.Log("Resposta correta!");
+                correctQuestions++;
             }
             else
             {
@@ -138,6 +140,7 @@ void SetQuestion()
             if (questionsAnswered == questions.Count)
             {
                 SceneManager.LoadScene("Results");
+                Debug.Log("Respostas corretas: " + correctQuestions);
             }
             else
             {
@@ -152,7 +155,7 @@ void SetQuestion()
         public string questionText;
         public string questionImage;
         public string[] options;
-        public int correctOptionIndex;
+        public string correctOptionIndex;
     }
 
     [System.Serializable]
