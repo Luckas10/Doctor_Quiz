@@ -17,15 +17,17 @@ public class responder : MonoBehaviour
 
     private string path;
     private string imageDirectoryPath;
-    private int questionsAnswered = 0;
+    private static int questionsAnswered = 0;
     private List<Question> questionsShown = new List<Question>();
 
     void Start()
     {
+
         imageDirectoryPath = Path.Combine(Application.dataPath);
         path = Path.Combine(Application.dataPath, "Scripts", "DoctorQuiz", "novas_perguntas.json");
         LoadQuestions();
         SetQuestion();
+        Debug.Log("questões respondidas Start: "+ questionsAnswered);
     }
 
     
@@ -36,10 +38,10 @@ public class responder : MonoBehaviour
         questions = questionList.questions.ToList();
         foreach (Question question in questions)
     {
-        Debug.Log("Question: " + question.questionText);
-        Debug.Log("Image: " + question.questionImage);
-        Debug.Log("Options: " + string.Join(",", question.options));
-        Debug.Log("Correct Option Index: " + question.correctOptionIndex);
+        //Debug.Log("Question: " + question.questionText);
+        //Debug.Log("Image: " + question.questionImage);
+        //Debug.Log("Options: " + string.Join(",", question.options));
+        //Debug.Log("Correct Option Index: " + question.correctOptionIndex);
     }
 
     }
@@ -53,65 +55,94 @@ public class responder : MonoBehaviour
             questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
         }
         else
-        {               Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
+        {
+            Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
         }
     }
 
 
-    void SetQuestion()
+void SetQuestion()
+{
+
+    if (questionsShown.Count < questions.Count)
     {
-        if (questionsShown.Count < questions.Count)
+        // Seleciona uma questão aleatória que ainda não foi mostrada
+        List<Question> remainingQuestions = questions.Except(questionsShown).ToList();
+        int randomIndex = Random.Range(0, remainingQuestions.Count);
+        currentQuestion = remainingQuestions[randomIndex];
+        questionsShown.Add(currentQuestion);
+
+        // Exibe a pergunta e a imagem, se houver
+        questionText.text = currentQuestion.questionText;
+        if (!string.IsNullOrEmpty(currentQuestion.questionImage))
         {
-            List<Question> remainingQuestions = questions.Except(questionsShown).ToList();
-            int randomIndex = Random.Range(0, remainingQuestions.Count);
-            currentQuestion = remainingQuestions[randomIndex];
-            questionsShown.Add(currentQuestion);
-            questionText.text = currentQuestion.questionText;
-            if (!string.IsNullOrEmpty(currentQuestion.questionImage))
-            {
-                LoadImage(currentQuestion.questionImage);
-                questionImage.gameObject.SetActive(true);
-            }
-            else
-            {
-                questionImage.gameObject.SetActive(false);
-            }
-            List<string> options = currentQuestion.options.ToList();
-            options = options.OrderBy(option => Random.value).ToList();
-            for (int i = 0; i < optionButtons.Count; i++)
-            {
-                optionButtons[i].GetComponentInChildren<Text>().text = options[i];
-                int index = i;
-                optionButtons[i].onClick.RemoveAllListeners();
-                optionButtons[i].onClick.AddListener(() => ConfirmAnswer(index));
-            }
-            confirmButton.gameObject.SetActive(false);
+            LoadImage(currentQuestion.questionImage);
+            questionImage.gameObject.SetActive(true);
         }
         else
         {
-            SceneManager.LoadScene("Results");
+            questionImage.gameObject.SetActive(false);
         }
+
+        // Embaralha as opções e define o texto dos botões de opção
+        List<string> options = currentQuestion.options.ToList();
+        options = options.OrderBy(option => Random.value).ToList();
+        int selectedOptionIndex = -1;
+
+        for (int i = 0; i < optionButtons.Count; i++)
+        {
+            int optionIndex = i;
+            optionButtons[optionIndex].GetComponentInChildren<Text>().text = options[optionIndex];
+
+            // Remove todos os listeners do botão de opção
+            optionButtons[optionIndex].onClick.RemoveAllListeners();
+
+            // Adiciona um listener que armazena o índice da opção selecionada na variável selectedOptionIndex
+            optionButtons[optionIndex].onClick.AddListener(() =>
+            {
+                selectedOptionIndex = optionIndex;
+                confirmButton.interactable = true;
+            });
+        }
+
+
+        // Remove todos os listeners do botão de confirmação
+        confirmButton.onClick.RemoveAllListeners();
+
+        // Adiciona um único listener que chama a função ConfirmAnswer() com o índice da opção selecionada
+        confirmButton.onClick.AddListener(() =>
+        {
+            ConfirmAnswer(selectedOptionIndex);
+        });
+
+        // Desabilita o botão de confirmação até que uma opção seja selecionada
+        confirmButton.interactable = false;
     }
+}
+
 
 
     void ConfirmAnswer(int index)
     {
-        if (index == currentQuestion.correctOptionIndex)
-        {
-            Debug.Log("Resposta correta!");
-        }
-        else
-        {
-            Debug.Log("Resposta incorreta!");
-        }
-        questionsAnswered++;
-        if (questionsAnswered == questions.Count)
-        {
-            SceneManager.LoadScene("Results");
-        }
-        else
-        {
-            SetQuestion();
+        if (index != -1){
+            if (index == currentQuestion.correctOptionIndex)
+            {
+                Debug.Log("Resposta correta!");
+            }
+            else
+            {
+                Debug.Log("Resposta incorreta!");
+            }
+            questionsAnswered++;
+            Debug.Log("questões respondidas ConfirmAnswer: "+ questionsAnswered);
+            if (questionsAnswered == questions.Count)
+            {
+                SceneManager.LoadScene("Results");
+            }
+            else
+            {
+                SetQuestion();
+            }
         }
     }
 
