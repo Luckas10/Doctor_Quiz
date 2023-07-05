@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using UnityEngine.SceneManagement;
+using SQLite4Unity3d;
 
 public class responder : MonoBehaviour
 {
@@ -13,46 +14,90 @@ public class responder : MonoBehaviour
     public Button confirmButton;
     public Text txtProgress;
     public Slider progressLevel;
-    
+
     private static float valueProgressLevel = 0.0f;
     private List<Question> questions;
     private Question currentQuestion;
     public static int correctQuestions;
 
-    private string path;
-    private string imageDirectoryPath;
+    private SQLiteConnection dbConnection;
+
     private static int questionsAnswered = 0;
     private List<Question> questionsShown = new List<Question>();
 
-    void Start()
+    private DatabaseManager databaseManager;
+
+    private void Start()
     {
-        imageDirectoryPath = Path.Combine(Application.dataPath);
-        path = Path.Combine(Application.dataPath, "Scripts", "DoctorQuiz", "novas_perguntas.json");
-        LoadQuestions();
+        string dbPath = Path.Combine(Application.persistentDataPath, "MyDatabase.sqlite");
+        dbConnection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
+
+        dbConnection.CreateTable<Question>();
+
+        LoadQuestionsFromDatabase();
         SetQuestion();
-        Debug.Log("questões respondidas Start: "+ questionsAnswered);
+        Debug.Log("Questões respondidas Start: " + questionsAnswered);
     }
 
-    
-    void LoadQuestions()
+    private void LoadQuestionsFromDatabase()
     {
-        string json = File.ReadAllText(path);
-        QuestionList questionList = JsonUtility.FromJson<QuestionList>(json);
-        questions = questionList.questions.ToList();
-        foreach (Question question in questions)
-    {
-        //Debug.Log("Question: " + question.questionText);
-        //Debug.Log("Image: " + question.questionImage);
-        //Debug.Log("Options: " + string.Join(",", question.options));
-        //Debug.Log("Correct Option Index: " + question.correctOptionIndex);
-    }
+        // Verifica se o banco de dados já contém questões
+        List<Question> existingQuestions = dbConnection.Table<Question>().ToList();
+        if (existingQuestions.Count > 0)
+        {
+            // Se já existirem questões no banco de dados, não é necessário inserir novamente
+            questions = existingQuestions;
+            return;
+        }
 
+        // Inserção das questões no banco de dados
+        List<Question> questionsToAdd = new List<Question>
+        {
+            // new Question
+            // {
+            //     questionText = "O que significa o segmento ST em um ECG?",
+            //     questionImage = "Images/img_Enunciado.png",
+            //     options = "Segmento de Taquicardia,Segmento de Tendência,Segmento de Tristeza,Segmento de ST",
+            //     correctOptionText = "Segmento de ST"
+            // },
+            // new Question
+            // {
+                
+            //     questionText = "Qual é a principal alteração do ECG associada à isquemia cardíaca?",
+            //     questionImage = "Images/img_enunciado2.png",
+            //     options = "Elevação do segmento ST,Aumento da amplitude da onda P,Diminuição do intervalo PR,Aumento da duração do complexo QRS",
+            //     correctOptionText = "Elevação do segmento ST"
+            // },
+            // new Question
+            // {
+            //     questionText = "O que indica um intervalo PR prolongado no ECG?",
+            //     questionImage = "Images/img_enunciado3.png",
+            //     options = "Bloqueio do ramo direito,Bloqueio do ramo esquerdo,Bloqueio atrioventricular de primeiro grau,Bloqueio atrioventricular de segundo grau",
+            //     correctOptionText = "Bloqueio atrioventricular de primeiro grau"
+            // },
+            // new Question
+            // {
+            //     questionText = "O que o gráfico desse ECG indica?",
+            //     questionImage = "Images/img_enunciado4.png",
+            //     options = "Taquicardia supraventricular,Ritmo sinusal normal,Taquicardia Ventricular,Fibrilação atrial",
+            //     correctOptionText = "Fibrilação atrial"
+            // }
+        };
+
+        foreach (Question question in questionsToAdd)
+        {
+            dbConnection.Insert(question);
+        }
+
+        questions = dbConnection.Table<Question>().ToList();
     }
 
     private void LoadImage(string imageName)
-    {           string imagePath = Path.Combine(imageDirectoryPath, imageName);
+    {
+        string imagePath = Path.Combine(Application.dataPath, imageName);
         if (File.Exists(imagePath))
-        {               byte[] imageData = File.ReadAllBytes(imagePath);
+        {
+            byte[] imageData = File.ReadAllBytes(imagePath);
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(imageData);
             questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
@@ -64,19 +109,15 @@ public class responder : MonoBehaviour
     }
 
 
-    void SetQuestion()
+    private void SetQuestion()
     {
         txtProgress.text = (questionsAnswered + 1).ToString() + " / " + questions.Count.ToString();
         progressLevel.value = valueProgressLevel;
         if (questionsShown.Count < questions.Count)
         {
-            // Seleciona uma questão aleatória que ainda não foi mostrada
-            List<Question> remainingQuestions = questions.Except(questionsShown).ToList();
-            int randomIndex = Random.Range(0, remainingQuestions.Count);
-            currentQuestion = remainingQuestions[randomIndex];
+            currentQuestion = questions[questionsAnswered];
             questionsShown.Add(currentQuestion);
 
-            // Exibe a pergunta e a imagem, se houver
             questionText.text = currentQuestion.questionText;
             if (!string.IsNullOrEmpty(currentQuestion.questionImage))
             {
@@ -88,8 +129,7 @@ public class responder : MonoBehaviour
                 questionImage.gameObject.SetActive(false);
             }
 
-            // Embaralha as opções e define o texto dos botões de opção
-            List<string> options = currentQuestion.options.ToList();
+            List<string> options = currentQuestion.options.Split(',').ToList();
             options = options.OrderBy(option => Random.value).ToList();
             int selectedOptionIndex = -1;
 
@@ -98,10 +138,8 @@ public class responder : MonoBehaviour
                 int optionIndex = i;
                 optionButtons[optionIndex].GetComponentInChildren<Text>().text = options[optionIndex];
 
-                // Remove todos os listeners do botão de opção
                 optionButtons[optionIndex].onClick.RemoveAllListeners();
 
-                // Adiciona um listener que armazena o índice da opção selecionada na variável selectedOptionIndex
                 optionButtons[optionIndex].onClick.AddListener(() =>
                 {
                     selectedOptionIndex = optionIndex;
@@ -109,27 +147,23 @@ public class responder : MonoBehaviour
                 });
             }
 
-
-            // Remove todos os listeners do botão de confirmação
             confirmButton.onClick.RemoveAllListeners();
 
-            // Adiciona um único listener que chama a função ConfirmAnswer() com o índice da opção selecionada
             confirmButton.onClick.AddListener(() =>
             {
                 ConfirmAnswer(selectedOptionIndex, options[selectedOptionIndex]);
             });
 
-            // Desabilita o botão de confirmação até que uma opção seja selecionada
             confirmButton.interactable = false;
         }
     }
 
 
-
-    void ConfirmAnswer(int index, string textoSelected)
+    private void ConfirmAnswer(int index, string selectedOption)
     {
-        if (index != -1){
-            if (textoSelected == currentQuestion.correctOptionIndex)
+        if (index != -1)
+        {
+            if (selectedOption == currentQuestion.correctOptionText)
             {
                 Debug.Log("Resposta correta!");
                 correctQuestions++;
@@ -138,9 +172,11 @@ public class responder : MonoBehaviour
             {
                 Debug.Log("Resposta incorreta!");
             }
+
             questionsAnswered++;
             valueProgressLevel += 1.0f / questions.Count;
-            Debug.Log("questões respondidas ConfirmAnswer: "+ questionsAnswered);
+            Debug.Log("Questões respondidas ConfirmAnswer: " + questionsAnswered);
+
             if (questionsAnswered == questions.Count)
             {
                 SceneManager.LoadScene("Results");
@@ -156,15 +192,11 @@ public class responder : MonoBehaviour
     [System.Serializable]
     public class Question
     {
-        public string questionText;
-        public string questionImage;
-        public string[] options;
-        public string correctOptionIndex;
-    }
-
-    [System.Serializable]
-    public class QuestionList
-    {
-        public Question[] questions;
+        [PrimaryKey, AutoIncrement]
+        public int id { get; set; }
+        public string questionText { get; set; }
+        public string questionImage { get; set; }
+        public string options { get; set; }
+        public string correctOptionText { get; set; }
     }
 }
