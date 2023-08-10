@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using UnityEngine.SceneManagement;
+using Mono.Data.Sqlite;
+using Mono.Data;
+using System.Data;
 
 public class responder : MonoBehaviour
 {
@@ -13,7 +16,8 @@ public class responder : MonoBehaviour
     public Button confirmButton;
     public Text txtProgress;
     public Slider progressLevel;
-    
+    public string DataBaseName;
+
     private static float valueProgressLevel = 0.0f;
     private List<Question> questions;
     private Question currentQuestion;
@@ -33,7 +37,7 @@ public class responder : MonoBehaviour
         Debug.Log("questões respondidas Start: "+ questionsAnswered);
     }
 
-    
+
     void LoadQuestions()
     {
         string json = File.ReadAllText(path);
