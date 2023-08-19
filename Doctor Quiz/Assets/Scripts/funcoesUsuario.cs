@@ -46,7 +46,6 @@ public class funcoesUsuario : MonoBehaviour
         dbcon.Close();
         dbcon = null;
         
-
-
     }
+
 }
