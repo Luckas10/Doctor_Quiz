@@ -5,6 +5,7 @@ using Mono.Data.Sqlite;
 using System.Data;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class login : MonoBehaviour
 {
@@ -13,20 +14,6 @@ public class login : MonoBehaviour
     public InputField PasswordInput;
     public string DataBaseName;
     public Text LoginStatus;
-
-    public void CheckInputs()
-    {
-        string textoDigitado = EmailInput.text;
-        if (textoDigitado.Contains("@gmail.com") && textoDigitado.Length > 10)
-        {
-            LoginStatus.text = "Email válido!";
-        }
-        else
-        {
-            LoginStatus.text = "Digite um email válido";
-        }
-    }
-
 
     public void InsertLogin()
     {
@@ -48,6 +35,7 @@ public class login : MonoBehaviour
         if (result > 0)
         {
             LoginStatus.text = "Login realizado com sucesso";
+            LoadScenes("Select Mode");
         }
         else
         {
@@ -60,4 +48,11 @@ public class login : MonoBehaviour
         dbcon = null;
 
     }
+
+    public void LoadScenes(string cena)
+    {
+        SceneManager.LoadScene(cena);
+    }
+
+
 }

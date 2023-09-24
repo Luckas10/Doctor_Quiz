@@ -2110,7 +2110,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 667208707}
         m_TargetAssemblyTypeName: login, Assembly-CSharp
-        m_MethodName: CheckInputs
+        m_MethodName: InsertLogin
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
