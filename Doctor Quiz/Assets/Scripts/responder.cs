@@ -64,6 +64,7 @@ public class responder : MonoBehaviour
                     {
                         Question question = new Question
                         {
+                            id = reader.GetInt32(reader.GetOrdinal("id")),
                             questionText = reader["enunciado"].ToString(),
                             questionImage = reader["caminho_imagem"].ToString(), // Obtém o caminho da imagem da tabela questoes
                             alternativa_a = reader["alternativa_a"].ToString(),
@@ -162,6 +163,10 @@ public class responder : MonoBehaviour
             {
                 Debug.Log("Resposta correta!");
                 correctQuestions++; // Incrementa a contagem de respostas corretas
+
+                // Inserir na tabela questao_usuario apenas se a resposta estiver correta
+                InsertIntoQuestaoUsuario(currentQuestion.id, 1); // Substitua 1 pelo ID do usuário
+
             }
             else
             {
@@ -188,9 +193,38 @@ public class responder : MonoBehaviour
         }
     }
 
+    void InsertIntoQuestaoUsuario(int questaoId, int userId)
+    {
+        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB))
+        {
+            dbConnection.Open();
+
+            using (SqliteCommand dbCmd = dbConnection.CreateCommand())
+            {
+                dbCmd.CommandText = "INSERT INTO questao_usuario (id_questao, id_usuario) VALUES (@QuestaoId, @UserId)";
+                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
+
+                int rowsAffected = dbCmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Debug.Log("Inserção na tabela questao_usuario bem-sucedida.");
+                }
+                else
+                {
+                    Debug.LogError("Falha ao inserir na tabela questao_usuario.");
+                }
+            }
+
+            dbConnection.Close();
+        }
+    }
+
     [System.Serializable]
     public class Question
     {
+        public int id;
         public string questionText;
         public string questionImage;
         public string alternativa_a;
