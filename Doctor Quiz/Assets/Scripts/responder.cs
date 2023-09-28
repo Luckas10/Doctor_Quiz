@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -5,7 +6,7 @@ using System.IO;
 using Mono.Data.Sqlite;
 using System.Data;
 
-public class Responder : MonoBehaviour
+public class responder : MonoBehaviour
 {
     public Text questionText;
     public Image questionImage;
@@ -22,7 +23,7 @@ public class Responder : MonoBehaviour
     private string pathToDB;
     private string imageDirectoryPath;
     private int questionsAnswered = 0;
-    private int correctQuestions = 0; // Variável para contar as respostas corretas
+    public static int correctQuestions = 0; // Variável para contar as respostas corretas
 
     void Start()
     {
