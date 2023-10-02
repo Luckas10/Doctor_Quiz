@@ -14,20 +14,6 @@ public class login : MonoBehaviour
     public string DataBaseName;
     public Text LoginStatus;
 
-    public void CheckInputs()
-    {
-        string textoDigitado = EmailInput.text;
-        if (textoDigitado.Contains("@gmail.com") && textoDigitado.Length > 10)
-        {
-            LoginStatus.text = "Email válido!";
-        }
-        else
-        {
-            LoginStatus.text = "Digite um email válido";
-        }
-    }
-
-
     public void InsertLogin()
     {
 

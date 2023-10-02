@@ -970,7 +970,6 @@ GameObject:
   - component: {fileID: 783325096}
   - component: {fileID: 783325095}
   - component: {fileID: 783325094}
-  - component: {fileID: 783325098}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1073,29 +1072,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &783325098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 783325093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96ea2e030d7593741a2b0c76205896af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questionText: {fileID: 1153441177}
-  questionImage: {fileID: 1656617456}
-  optionButtons:
-  - {fileID: 2051295454}
-  - {fileID: 632746512}
-  - {fileID: 1502746185}
-  - {fileID: 709453550}
-  confirmButton: {fileID: 1425605850}
-  txtProgress: {fileID: 1687870858}
-  progressLevel: {fileID: 243847529}
-  DataBaseName: ecg_app
 --- !u!1 &863951619
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,7 +2066,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Question
+          m_StringArgument: Questions
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1425605851
@@ -2342,6 +2318,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1656617454}
   m_CullTransparentMesh: 1
+--- !u!1 &1678327993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1678327996}
+  - component: {fileID: 1678327995}
+  - component: {fileID: 1678327997}
+  m_Layer: 0
+  m_Name: App Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1678327995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678327993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24772ffeda39ba4a8d7d6c0d052d3cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DataBaseName: ecg_app
+--- !u!4 &1678327996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678327993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 300.03085, y: 924.70355, z: -6.7365932}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1678327997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678327993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96ea2e030d7593741a2b0c76205896af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questionText: {fileID: 1153441177}
+  questionImage: {fileID: 1656617456}
+  optionButtons:
+  - {fileID: 2051295454}
+  - {fileID: 632746512}
+  - {fileID: 1502746185}
+  - {fileID: 709453550}
+  confirmButton: {fileID: 1425605850}
+  txtProgress: {fileID: 1687870858}
+  progressLevel: {fileID: 243847529}
+  DataBaseName: ecg_app.db
 --- !u!1 &1687870856
 GameObject:
   m_ObjectHideFlags: 0

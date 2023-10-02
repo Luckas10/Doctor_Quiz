@@ -28,7 +28,7 @@ public class responder : MonoBehaviour
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
-        pathToDB = Application.dataPath + "/" + DataBaseName;
+        pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
 
         LoadQuestionsForUser(1); // Carregue as questões para o usuário com ID 1
 
@@ -138,7 +138,7 @@ public class responder : MonoBehaviour
 
     private void LoadImage(string imageName)
     {
-        string imagePath = Path.Combine(imageDirectoryPath, imageName);
+        string imagePath = imageDirectoryPath + imageName;
 
         if (File.Exists(imagePath))
         {
