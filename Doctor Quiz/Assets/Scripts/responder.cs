@@ -24,6 +24,7 @@ public class responder : MonoBehaviour
     private string imageDirectoryPath;
     private int questionsAnswered = 0;
     public static int correctQuestions = 0; // Variável para contar as respostas corretas
+    public static string tipoAtual = "iniciante"; // Armazena o tipo de questão atual
 
     void Start()
     {
@@ -54,9 +55,11 @@ public class responder : MonoBehaviour
             {
                 dbCmd.CommandText = "SELECT q.*, qu.id_questao as responded " +
                                     "FROM questoes q " +
-                                    "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId";
+                                    "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId" +
+                    "WHERE q.tipo = @TipoAtual";
 
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId)); // Adicionar o parâmetro UserId
+                dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual)); // Adicionar o parâmetro TipoAtual
 
                 using (SqliteDataReader reader = dbCmd.ExecuteReader())
                 {
@@ -66,6 +69,7 @@ public class responder : MonoBehaviour
                         {
                             id = reader.GetInt32(reader.GetOrdinal("id")),
                             questionText = reader["enunciado"].ToString(),
+                            tipo = tipoAtual,
                             questionImage = reader["caminho_imagem"].ToString(), // Obtém o caminho da imagem da tabela questoes
                             alternativa_a = reader["alternativa_a"].ToString(),
                             alternativa_b = reader["alternativa_b"].ToString(),
@@ -89,6 +93,46 @@ public class responder : MonoBehaviour
         }
     }
 
+    int GetTipoQuestionsCount(int userId, string tipo)
+    {
+        int totalQuestionsOfType = 0;
+        int answeredQuestionsOfType = 0;
+
+        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB))
+        {
+            dbConnection.Open();
+
+            using (SqliteCommand dbCmd = dbConnection.CreateCommand())
+            {
+                // Consulta para contar todas as questões do tipo especificado
+                dbCmd.CommandText = "SELECT COUNT(*) FROM questoes WHERE tipo = @Tipo";
+                dbCmd.Parameters.Add(new SqliteParameter("@Tipo", tipo));
+
+                totalQuestionsOfType = Convert.ToInt32(dbCmd.ExecuteScalar());
+
+                // Consulta para contar as questões desse tipo já respondidas pelo usuário
+                dbCmd.CommandText = "SELECT COUNT(*) FROM questao_usuario qu " +
+                                    "INNER JOIN questoes q ON qu.id_questao = q.id " +
+                                    "WHERE qu.id_usuario = @UserId AND q.tipo = @Tipo";
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
+
+                answeredQuestionsOfType = Convert.ToInt32(dbCmd.ExecuteScalar());
+            }
+
+            dbConnection.Close();
+        }
+
+        // Aqui você pode usar esses valores como necessário
+        Debug.Log("Total de questões do tipo " + tipo + ": " + totalQuestionsOfType);
+        Debug.Log("Questões do tipo " + tipo + " respondidas pelo usuário: " + answeredQuestionsOfType);
+
+        // Calcular e retornar o progresso com base no tipo atual
+        float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
+        progressLevel.value = progress;
+        
+        return totalQuestionsOfType;
+    }
+
     void SetQuestion(int questionIndex)
     {
         if (questionIndex >= 0 && questionIndex < questions.Count)
@@ -96,7 +140,9 @@ public class responder : MonoBehaviour
             Question currentQuestion = questions[questionIndex];
 
             txtProgress.text = (questionsAnswered + 1).ToString() + " / " + questions.Count.ToString();
-            progressLevel.value = valueProgressLevel;
+
+            // Atualize o progressLevel com base no tipo atual
+            GetTipoQuestionsCount(1, tipoAtual);
 
             // Exiba a pergunta e imagem
             questionText.text = currentQuestion.questionText;
@@ -226,6 +272,7 @@ public class responder : MonoBehaviour
     {
         public int id;
         public string questionText;
+        public string tipo;
         public string questionImage;
         public string alternativa_a;
         public string alternativa_b;
