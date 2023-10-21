@@ -80,11 +80,8 @@ public class responder : MonoBehaviour
                         questions.Add(question);
 
                         // Verifique se a questão já foi respondida pelo usuário
-                        int responded = reader["responded"] != DBNull.Value ? reader.GetInt32(reader.GetOrdinal("responded")) : 0;
-                        if (responded > 0)
-                        {
-                            questionsAnswered++;
-                        }
+                       question.responded = reader["responded"] != DBNull.Value ?  
+                                         reader.GetInt32(reader.GetOrdinal("responded")) : 0;
                     }
                 }
             }
@@ -137,7 +134,8 @@ public class responder : MonoBehaviour
     {
         if (questionIndex >= 0 && questionIndex < questions.Count)
         {
-            Question currentQuestion = questions[questionIndex];
+            currentQuestionIndex = questionIndex;
+            Question currentQuestion = questions[currentQuestionIndex];
 
             txtProgress.text = (questionsAnswered + 1).ToString() + " / " + questions.Count.ToString();
 
@@ -199,73 +197,72 @@ public class responder : MonoBehaviour
         }
     }
 
-    void ConfirmAnswer(int questionIndex)
-    {
-        if (questionIndex >= 0 && questionIndex < questions.Count)
-        {
+    void ConfirmAnswer(int questionIndex) {
+        if (questionIndex >= 0 && questionIndex < questions.Count) {
             Question currentQuestion = questions[questionIndex];
-
-            if (optionButtons[0].GetComponentInChildren<Text>().text == currentQuestion.opcao_correta)
-            {
+            
+            if (optionButtons[0].GetComponentInChildren<Text>().text == currentQuestion.opcao_correta) {
                 Debug.Log("Resposta correta!");
-                correctQuestions++; // Incrementa a contagem de respostas corretas
-
-                // Inserir na tabela questao_usuario apenas se a resposta estiver correta
-                InsertIntoQuestaoUsuario(currentQuestion.id, 1); // Substitua 1 pelo ID do usuário
-
-            }
-            else
-            {
+                correctQuestions++;  
+                
+                InsertIntoQuestaoUsuario(currentQuestion.id, 1, 1); 
+                
+            } else {
                 Debug.Log("Resposta incorreta!");
-                // Lógica para tratar a resposta incorreta
             }
-
+            
             questionsAnswered++;
-            valueProgressLevel = (float)questionsAnswered / questions.Count;
-            Debug.Log("questões respondidas ConfirmAnswer: " + questionsAnswered);
+            valueProgressLevel = (float)questionsAnswered / questions.Count;  
+            
+            int nextUnansweredQuestionIndex = currentQuestionIndex + 1;
 
-            currentQuestionIndex++;
-
-            if (currentQuestionIndex < questions.Count)
-            {
-                SetQuestion(currentQuestionIndex);
+            while (nextUnansweredQuestionIndex < questions.Count &&  
+                questions[nextUnansweredQuestionIndex].responded > 0) {
+                nextUnansweredQuestionIndex++;    
             }
-            else
-            {
+            
+            currentQuestionIndex = nextUnansweredQuestionIndex; 
+
+            if (currentQuestionIndex < questions.Count) {
+                SetQuestion(currentQuestionIndex);   
+            } else {
                 Debug.Log("Todas as questões foram respondidas.");
-                Debug.Log("Respostas corretas: " + correctQuestions); // Exibe o número de respostas corretas
-                // Trate o caso em que todas as questões já foram respondidas.
+                Debug.Log("Respostas corretas: " + correctQuestions); 
             }
         }
     }
 
-    void InsertIntoQuestaoUsuario(int questaoId, int userId)
-    {
-        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB))
+
+
+    void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded) {
+        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB)) 
         {
             dbConnection.Open();
-
-            using (SqliteCommand dbCmd = dbConnection.CreateCommand())
+            
+            using (SqliteCommand dbCmd = dbConnection.CreateCommand()) 
             {
-                dbCmd.CommandText = "INSERT INTO questao_usuario (id_questao, id_usuario) VALUES (@QuestaoId, @UserId)";
-                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
-
+                dbCmd.CommandText = "INSERT INTO questao_usuario (id_questao, id_usuario, responded) " +
+                    "VALUES (@QuestaoId, @UserId, @Responded)";
+                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));       
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));       
+                dbCmd.Parameters.Add(new SqliteParameter("@Responded", responded));
+                
                 int rowsAffected = dbCmd.ExecuteNonQuery();
-
-                if (rowsAffected > 0)
+                
+                if (rowsAffected > 0) 
                 {
                     Debug.Log("Inserção na tabela questao_usuario bem-sucedida.");
                 }
-                else
+                else 
                 {
                     Debug.LogError("Falha ao inserir na tabela questao_usuario.");
                 }
             }
-
-            dbConnection.Close();
+            
+            dbConnection.Close();    
         }
     }
+
 
     [System.Serializable]
     public class Question
@@ -279,5 +276,6 @@ public class responder : MonoBehaviour
         public string alternativa_c;
         public string alternativa_d;
         public string opcao_correta;
+        public int responded; 
     }
 }
