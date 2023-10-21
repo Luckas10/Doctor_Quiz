@@ -54,8 +54,8 @@ public class responder : MonoBehaviour
             using (SqliteCommand dbCmd = dbConnection.CreateCommand())
             {
                 dbCmd.CommandText = "SELECT q.*, qu.id_questao as responded " +
-                                    "FROM questoes q " +
-                                    "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId" +
+                    "FROM questoes q " +
+                    "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId " +
                     "WHERE q.tipo = @TipoAtual";
 
                 dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId)); // Adicionar o parâmetro UserId
