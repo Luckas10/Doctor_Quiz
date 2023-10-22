@@ -26,14 +26,16 @@ public class responder : MonoBehaviour
     public static int correctQuestions = 0; // Variável para contar as respostas corretas
     public static string tipoAtual = "iniciante"; // Armazena o tipo de questão atual
 
+    private int totalQuestionsOfType;
+
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
         pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
 
-        LoadQuestionsForUser(1); // Carregue as questões para o usuário com ID 1
-
-        if (questions.Count > 0)
+        LoadQuestionsForUser(4); // Carregue as questões para o usuário com ID 2. Substitua o primeiro parametro pelo id do usuario atual
+        totalQuestionsOfType = GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
+        if (totalQuestionsOfType > 0)
         {
             SetQuestion(currentQuestionIndex);
         }
@@ -56,7 +58,7 @@ public class responder : MonoBehaviour
                 dbCmd.CommandText = "SELECT q.*, qu.id_questao as responded " +
                     "FROM questoes q " +
                     "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId " +
-                    "WHERE q.tipo = @TipoAtual";
+                    "WHERE q.tipo = @TipoAtual AND qu.id_questao IS NULL";
 
                 dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId)); // Adicionar o parâmetro UserId
                 dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual)); // Adicionar o parâmetro TipoAtual
@@ -81,7 +83,7 @@ public class responder : MonoBehaviour
 
                         // Verifique se a questão já foi respondida pelo usuário
                        question.responded = reader["responded"] != DBNull.Value ?  
-                                         reader.GetInt32(reader.GetOrdinal("responded")) : 0;
+                                         reader.GetInt32(reader.GetOrdinal("responded")) : 1;
                     }
                 }
             }
@@ -89,7 +91,6 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
     }
-
     int GetTipoQuestionsCount(int userId, string tipo)
     {
         int totalQuestionsOfType = 0;
@@ -119,10 +120,6 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
 
-        // Aqui você pode usar esses valores como necessário
-        Debug.Log("Total de questões do tipo " + tipo + ": " + totalQuestionsOfType);
-        Debug.Log("Questões do tipo " + tipo + " respondidas pelo usuário: " + answeredQuestionsOfType);
-
         // Calcular e retornar o progresso com base no tipo atual
         float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
         progressLevel.value = progress;
@@ -132,15 +129,15 @@ public class responder : MonoBehaviour
 
     void SetQuestion(int questionIndex)
     {
-        if (questionIndex >= 0 && questionIndex < questions.Count)
+        if (questionIndex >= 0 && questionIndex < totalQuestionsOfType)
         {
             currentQuestionIndex = questionIndex;
             Question currentQuestion = questions[currentQuestionIndex];
 
-            txtProgress.text = (questionsAnswered + 1).ToString() + " / " + questions.Count.ToString();
+            txtProgress.text = (questionsAnswered + 1).ToString() + " / " + totalQuestionsOfType.ToString();
 
             // Atualize o progressLevel com base no tipo atual
-            GetTipoQuestionsCount(1, tipoAtual);
+            GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
 
             // Exiba a pergunta e imagem
             questionText.text = currentQuestion.questionText;
@@ -175,7 +172,7 @@ public class responder : MonoBehaviour
         }
         else
         {
-            Debug.Log("Todas as questões foram respondidas.");
+            Debug.Log("Todas as questões foram respondidas-SetQuestion.");
             // Trate o caso em que todas as questões já foram respondidas.
         }
     }
@@ -205,34 +202,33 @@ public class responder : MonoBehaviour
                 Debug.Log("Resposta correta!");
                 correctQuestions++;  
                 
-                InsertIntoQuestaoUsuario(currentQuestion.id, 1, 1); 
+                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
                 
             } else {
                 Debug.Log("Resposta incorreta!");
+                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
             }
             
             questionsAnswered++;
-            valueProgressLevel = (float)questionsAnswered / questions.Count;  
+            valueProgressLevel = (float)questionsAnswered / totalQuestionsOfType;  
             
-            int nextUnansweredQuestionIndex = currentQuestionIndex + 1;
+            int nextUnansweredQuestionIndex = questionIndex + 1;
+            
+            Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);//Questão atual id / total de questões
+
+            if (nextUnansweredQuestionIndex < questions.Count) {
+                SetQuestion(nextUnansweredQuestionIndex);   
+            } else {
+                Debug.Log("Todas as questões foram respondidas: " + nextUnansweredQuestionIndex + "/" + questions.Count);
+                Debug.Log("Questões corretas: " + correctQuestions + "/" + totalQuestionsOfType);
+            }
 
             while (nextUnansweredQuestionIndex < questions.Count &&  
                 questions[nextUnansweredQuestionIndex].responded > 0) {
                 nextUnansweredQuestionIndex++;    
             }
-            
-            currentQuestionIndex = nextUnansweredQuestionIndex; 
-
-            if (currentQuestionIndex < questions.Count) {
-                SetQuestion(currentQuestionIndex);   
-            } else {
-                Debug.Log("Todas as questões foram respondidas.");
-                Debug.Log("Respostas corretas: " + correctQuestions); 
-            }
         }
     }
-
-
 
     void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded) {
         using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB)) 
