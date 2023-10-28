@@ -2386,7 +2386,7 @@ MonoBehaviour:
   confirmButton: {fileID: 1425605850}
   txtProgress: {fileID: 1687870858}
   progressLevel: {fileID: 243847529}
-  DataBaseName: ecg_app.db
+  DataBaseName: ecg_app
 --- !u!1 &1687870856
 GameObject:
   m_ObjectHideFlags: 0

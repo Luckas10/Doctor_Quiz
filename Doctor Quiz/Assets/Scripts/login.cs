@@ -5,6 +5,7 @@ using Mono.Data.Sqlite;
 using System.Data;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class login : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class login : MonoBehaviour
         if (result > 0)
         {
             LoginStatus.text = "Login realizado com sucesso";
+            SceneManager.LoadScene("Select Mode 1");
         }
         else
         {

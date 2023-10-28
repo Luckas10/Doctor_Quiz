@@ -236,7 +236,7 @@ RectTransform:
   m_Children:
   - {fileID: 444339146}
   m_Father: {fileID: 783325097}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -287,16 +287,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707526458}
-        m_TargetAssemblyTypeName: responder2, Assembly-CSharp
-        m_MethodName: LoadNivel
-        m_Mode: 5
+      - m_Target: {fileID: 1707526457}
+        m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
+        m_MethodName: buttonPressionado
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_ObjectArgument: {fileID: 99142185}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: iniciante
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &99142186
@@ -370,7 +370,7 @@ RectTransform:
   m_Children:
   - {fileID: 1522378597}
   m_Father: {fileID: 783325097}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -421,13 +421,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707526458}
-        m_TargetAssemblyTypeName: responder2, Assembly-CSharp
-        m_MethodName: LoadNivel
-        m_Mode: 5
+      - m_Target: {fileID: 1707526457}
+        m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
+        m_MethodName: buttonPressionado
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 166714879}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: "intermedi\xE1rio"
@@ -837,12 +837,12 @@ RectTransform:
   m_Children:
   - {fileID: 508105392}
   - {fileID: 33842182}
-  - {fileID: 1838998104}
   - {fileID: 1707526456}
   - {fileID: 99142184}
   - {fileID: 166714878}
   - {fileID: 1013509176}
   - {fileID: 1996783807}
+  - {fileID: 1838998104}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -863,9 +863,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4cc32175dbae734eade96a4d89ba992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btnConfirmar: {fileID: 1838998105}
-  nameNivel: 
-  DataBaseName: ecg_app
 --- !u!1 &822802209
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,7 +976,7 @@ RectTransform:
   m_Children:
   - {fileID: 2106780644}
   m_Father: {fileID: 783325097}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1030,13 +1027,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707526458}
-        m_TargetAssemblyTypeName: responder2, Assembly-CSharp
-        m_MethodName: LoadNivel
-        m_Mode: 5
+      - m_Target: {fileID: 1707526457}
+        m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
+        m_MethodName: buttonPressionado
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1013509177}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: "avan\xE7ado"
@@ -1238,7 +1235,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1707526456}
   - component: {fileID: 1707526457}
-  - component: {fileID: 1707526458}
   m_Layer: 5
   m_Name: _GC
   m_TagString: Untagged
@@ -1253,13 +1249,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1707526455}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 783325097}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1278,21 +1274,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18dd328dbfecd834a9102d53a489ee7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1707526458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707526455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4cc32175dbae734eade96a4d89ba992, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  btnConfirmar: {fileID: 1838998105}
-  nameNivel: 
-  DataBaseName: 
+  questionType: 
+  buttonConfirmar: {fileID: 1838998105}
 --- !u!1 &1788211579
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1389,7 @@ RectTransform:
   m_Children:
   - {fileID: 1788211580}
   m_Father: {fileID: 783325097}
-  m_RootOrder: 2
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1457,16 +1440,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707526458}
-        m_TargetAssemblyTypeName: responder2, Assembly-CSharp
-        m_MethodName: EnviarNivel
+      - m_Target: {fileID: 1707526457}
+        m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
+        m_MethodName: GetQuestionType
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Questions
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1707526457}
@@ -1552,7 +1535,7 @@ RectTransform:
   m_Children:
   - {fileID: 822802210}
   m_Father: {fileID: 783325097}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1603,13 +1586,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1707526458}
-        m_TargetAssemblyTypeName: responder2, Assembly-CSharp
-        m_MethodName: LoadNivel
-        m_Mode: 5
+      - m_Target: {fileID: 1707526457}
+        m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
+        m_MethodName: buttonPressionado
+        m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgument: {fileID: 1996783808}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Button, UnityEngine.UI
           m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: expert
