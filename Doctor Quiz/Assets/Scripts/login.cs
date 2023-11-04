@@ -48,4 +48,11 @@ public class login : MonoBehaviour
         dbcon = null;
 
     }
+
+    public void LoadScenes(string cena)
+    {
+        SceneManager.LoadScene(cena);
+    }
+
+
 }

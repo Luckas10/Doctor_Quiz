@@ -1038,6 +1038,7 @@ MonoBehaviour:
   EmailInput: {fileID: 879876575}
   PasswordInput: {fileID: 359650011}
   DataBaseName: ecg_app
+  CadastroStatus: {fileID: 892151214}
 --- !u!1 &783325093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,6 +1141,7 @@ RectTransform:
   - {fileID: 879876574}
   - {fileID: 359650010}
   - {fileID: 1122932975}
+  - {fileID: 892151213}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1183,8 +1185,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1351.7277, y: 2759.6}
-  m_SizeDelta: {x: 636.6021, y: 213.92}
+  m_AnchoredPosition: {x: -1351.7277, y: 1923.161}
+  m_SizeDelta: {x: 636.6021, y: 132.3114}
   m_Pivot: {x: -1.6183977, y: 11.2494}
 --- !u!114 &836085989
 MonoBehaviour:
@@ -1456,6 +1458,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879876573}
   m_CullTransparentMesh: 1
+--- !u!1 &892151212
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 892151213}
+  - component: {fileID: 892151215}
+  - component: {fileID: 892151214}
+  m_Layer: 5
+  m_Name: CadastroStatus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &892151213
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892151212}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 783325097}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -1167, y: 990.75}
+  m_SizeDelta: {x: 550.8828, y: 51.2128}
+  m_Pivot: {x: -1.6183977, y: 11.2494}
+--- !u!114 &892151214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892151212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: c1afbf2abe74296498713657a66f3083, type: 3}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 0
+    m_MaxSize: 30
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "Fa\xE7a o seu cadastro"
+--- !u!222 &892151215
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892151212}
+  m_CullTransparentMesh: 1
 --- !u!1 &965590460
 GameObject:
   m_ObjectHideFlags: 0
@@ -1709,7 +1791,7 @@ GameObject:
   - component: {fileID: 1122932977}
   - component: {fileID: 1122932976}
   m_Layer: 5
-  m_Name: btnLogin (1)
+  m_Name: btnTermos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2439,7 +2521,7 @@ GameObject:
   - component: {fileID: 1788211582}
   - component: {fileID: 1788211581}
   m_Layer: 5
-  m_Name: txtLogin
+  m_Name: txtCadastrar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2498,7 +2580,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Login
+  m_Text: Cadastrar
 --- !u!222 &1788211582
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2520,7 +2602,7 @@ GameObject:
   - component: {fileID: 1838998106}
   - component: {fileID: 1838998105}
   m_Layer: 5
-  m_Name: btnLogin
+  m_Name: btnCadastrar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
