@@ -35,7 +35,7 @@ public class login : MonoBehaviour
         if (result > 0)
         {
             LoginStatus.text = "Login realizado com sucesso";
-            LoadScenes("Select Mode");
+            SceneManager.LoadScene("Select Mode 1");
         }
         else
         {
