@@ -6,39 +6,25 @@ using UnityEngine.UI;
 
 public class comandosBasicos : MonoBehaviour
 {
-    private Button  buttonPressed;
-    public string   questionType;
+    private string   questionType;
     public Button   buttonConfirmar;
 
     public void Start()
     {
-        try {
-            buttonConfirmar.interactable = false;
-        }
-        catch {
-            Debug.Log("Botão não instanciado");
-        }
+        buttonConfirmar.interactable = false;
     }
 
     
-    public void buttonPressionado(Button button)
+    public void buttonPressionado(string textButton)
     {
         buttonConfirmar.interactable = true;
-        buttonPressed = button;
+        questionType = textButton;
     }
 
-
-    public void LoadScenes(string cena)
+    public void GetQuestionType(string cena)
     {
+        buttonConfirmar.interactable = true;
+        Debug.Log(questionType);
         SceneManager.LoadScene(cena);
-    }
-
-    public void GetQuestionType()
-    {
-        if (buttonPressed != null)
-        {
-            questionType = buttonPressed.GetComponentInChildren<Text>().text;
-            Debug.Log(questionType);
-        }
     }
 }
