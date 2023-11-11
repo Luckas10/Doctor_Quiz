@@ -46,7 +46,7 @@ public class login : MonoBehaviour
             reader.Close();
 
             LoginStatus.text = "Login realizado com sucesso";
-            SceneManager.LoadScene("Select Mode 1");
+            SceneManager.LoadScene("Select Mode");
         }
         else
         {

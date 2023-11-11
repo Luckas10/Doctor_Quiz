@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using Mono.Data.Sqlite;
 using System.Data;
+using UnityEngine.SceneManagement;
 
 public class responder : MonoBehaviour
 {
@@ -24,24 +25,41 @@ public class responder : MonoBehaviour
     private string imageDirectoryPath;
     private int questionsAnswered = 0;
     public static int correctQuestions = 0; // Variável para contar as respostas corretas
-    public static string tipoAtual = "iniciante"; // Armazena o tipo de questão atual
+    public static string tipoAtual; // Armazena o tipo de questão atual
 
     private int totalQuestionsOfType;
+    private int id_usuario;
+    private string respostaUsuario;
 
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
         pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
 
-        LoadQuestionsForUser(4); // Carregue as questões para o usuário com ID 2. Substitua o primeiro parametro pelo id do usuario atual
-        totalQuestionsOfType = GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
-        if (totalQuestionsOfType > 0)
+        // Recupera o valor de "id_usuario" usando PlayerPrefs
+        int id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
+        // Recupera a variável "questionType" usando PlayerPrefs
+        tipoAtual = PlayerPrefs.GetString("QuestionType", "");
+
+        Debug.Log(id_usuario);
+
+        // Verifica se o valor foi salvo corretamente
+        if (id_usuario != -1)
         {
-            SetQuestion(currentQuestionIndex);
+            LoadQuestionsForUser(id_usuario);
+            totalQuestionsOfType = GetTipoQuestionsCount(id_usuario, tipoAtual);
+            if (totalQuestionsOfType > 0)
+            {
+                SetQuestion(currentQuestionIndex);
+            }
+            else
+            {
+                Debug.Log("Não há questões disponíveis para este usuário.");
+            }
         }
         else
         {
-            Debug.Log("Não há questões disponíveis para este usuário.");
+            Debug.Log("Erro ao obter o valor de id_usuario de PlayerPrefs.");
         }
     }
 
@@ -82,8 +100,8 @@ public class responder : MonoBehaviour
                         questions.Add(question);
 
                         // Verifique se a questão já foi respondida pelo usuário
-                       question.responded = reader["responded"] != DBNull.Value ?  
-                                         reader.GetInt32(reader.GetOrdinal("responded")) : 1;
+                        question.responded = reader["responded"] != DBNull.Value ?
+                                          reader.GetInt32(reader.GetOrdinal("responded")) : 1;
                     }
                 }
             }
@@ -123,7 +141,7 @@ public class responder : MonoBehaviour
         // Calcular e retornar o progresso com base no tipo atual
         float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
         progressLevel.value = progress;
-        
+
         return totalQuestionsOfType;
     }
 
@@ -137,7 +155,7 @@ public class responder : MonoBehaviour
             txtProgress.text = (questionsAnswered + 1).ToString() + " / " + totalQuestionsOfType.ToString();
 
             // Atualize o progressLevel com base no tipo atual
-            GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
+            GetTipoQuestionsCount(id_usuario, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
 
             // Exiba a pergunta e imagem
             questionText.text = currentQuestion.questionText;
@@ -177,6 +195,13 @@ public class responder : MonoBehaviour
         }
     }
 
+    public void ButtonInteractable(Text textResposta)
+    {
+        respostaUsuario = textResposta.text;
+        confirmButton.interactable = true;
+    }
+
+
     private void LoadImage(string imageName)
     {
         string imagePath = imageDirectoryPath + imageName;
@@ -194,68 +219,79 @@ public class responder : MonoBehaviour
         }
     }
 
-    void ConfirmAnswer(int questionIndex) {
-        if (questionIndex >= 0 && questionIndex < questions.Count) {
+    void ConfirmAnswer(int questionIndex)
+    {
+        if (questionIndex >= 0 && questionIndex < questions.Count)
+        {
             Question currentQuestion = questions[questionIndex];
-            
-            if (optionButtons[0].GetComponentInChildren<Text>().text == currentQuestion.opcao_correta) {
+
+            if (respostaUsuario == currentQuestion.opcao_correta)
+            {
                 Debug.Log("Resposta correta!");
-                correctQuestions++;  
-                
-                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
-                
-            } else {
-                Debug.Log("Resposta incorreta!");
-                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
+                correctQuestions++;
+
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1); // Substitua o segundo parâmetro pelo id do usuário atual
+
             }
-            
+            else
+            {
+                Debug.Log("Resposta incorreta!");
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1); // Substitua o segundo parâmetro pelo id do usuário atual
+            }
+
             questionsAnswered++;
-            valueProgressLevel = (float)questionsAnswered / totalQuestionsOfType;  
-            
+            valueProgressLevel = (float)questionsAnswered / totalQuestionsOfType;
+
             int nextUnansweredQuestionIndex = questionIndex + 1;
-            
+
             Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);//Questão atual id / total de questões
 
-            if (nextUnansweredQuestionIndex < questions.Count) {
-                SetQuestion(nextUnansweredQuestionIndex);   
-            } else {
+            if (nextUnansweredQuestionIndex < questions.Count)
+            {
+                SetQuestion(nextUnansweredQuestionIndex);
+            }
+            else
+            {
                 Debug.Log("Todas as questões foram respondidas: " + nextUnansweredQuestionIndex + "/" + questions.Count);
                 Debug.Log("Questões corretas: " + correctQuestions + "/" + totalQuestionsOfType);
+                SceneManager.LoadScene("Results");
             }
 
-            while (nextUnansweredQuestionIndex < questions.Count &&  
-                questions[nextUnansweredQuestionIndex].responded > 0) {
-                nextUnansweredQuestionIndex++;    
+            while (nextUnansweredQuestionIndex < questions.Count &&
+                questions[nextUnansweredQuestionIndex].responded > 0)
+            {
+                nextUnansweredQuestionIndex++;
             }
         }
     }
 
-    void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded) {
-        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB)) 
+    void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded)
+    {
+        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB))
         {
             dbConnection.Open();
-            
-            using (SqliteCommand dbCmd = dbConnection.CreateCommand()) 
+
+            using (SqliteCommand dbCmd = dbConnection.CreateCommand())
             {
                 dbCmd.CommandText = "INSERT INTO questao_usuario (id_questao, id_usuario, responded) " +
                     "VALUES (@QuestaoId, @UserId, @Responded)";
-                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));       
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));       
+                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
                 dbCmd.Parameters.Add(new SqliteParameter("@Responded", responded));
-                
+
                 int rowsAffected = dbCmd.ExecuteNonQuery();
-                
-                if (rowsAffected > 0) 
+
+                if (rowsAffected > 0)
                 {
                     Debug.Log("Inserção na tabela questao_usuario bem-sucedida.");
                 }
-                else 
+                else
                 {
                     Debug.LogError("Falha ao inserir na tabela questao_usuario.");
                 }
             }
-            
-            dbConnection.Close();    
+
+            dbConnection.Close();
         }
     }
 
@@ -272,6 +308,6 @@ public class responder : MonoBehaviour
         public string alternativa_c;
         public string alternativa_d;
         public string opcao_correta;
-        public int responded; 
+        public int responded;
     }
 }

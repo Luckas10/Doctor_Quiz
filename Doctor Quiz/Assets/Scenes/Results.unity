@@ -575,6 +575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 862268084}
   - component: {fileID: 862268086}
+  - component: {fileID: 862268087}
   m_Layer: 5
   m_Name: _GC
   m_TagString: Untagged
@@ -615,6 +616,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonConfirmar: {fileID: 0}
+--- !u!114 &862268087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862268083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87e78e2cce198f4d9d7b499cf3b3008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questionsCorrectText: {fileID: 2143837537}
+  samples: {fileID: 1570313901}
 --- !u!1 &961981692
 GameObject:
   m_ObjectHideFlags: 0
