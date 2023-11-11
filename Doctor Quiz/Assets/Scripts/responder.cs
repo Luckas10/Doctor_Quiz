@@ -221,6 +221,7 @@ public class responder : MonoBehaviour
 
     void ConfirmAnswer(int questionIndex)
     {
+        id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
         if (questionIndex >= 0 && questionIndex < questions.Count)
         {
             Question currentQuestion = questions[questionIndex];
