@@ -59,7 +59,7 @@ public class funcoesUsuario : MonoBehaviour
             Debug.Log("Inserção bem-sucedida.");
             LoadScenes("Login");
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
             CadastroStatus.text = "E-mail já cadastrado";
         }

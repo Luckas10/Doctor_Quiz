@@ -8,10 +8,18 @@ public class comandosBasicos : MonoBehaviour
 {
     private string questionType;
     public Button buttonConfirmar;
+    public Toggle CheckBox;
 
     public void Start()
     {
-        buttonConfirmar.interactable = false;
+        try
+        {
+            buttonConfirmar.interactable = false;
+        }
+        catch
+        {
+            
+        }
     }
 
 
@@ -32,5 +40,17 @@ public class comandosBasicos : MonoBehaviour
     public void LoadScene(string cena)
     {
         SceneManager.LoadScene(cena);
+    }
+
+    public void ButtonTerms(Button buttonCadastrar)
+    {
+        if (CheckBox.isOn)
+        {
+            buttonCadastrar.interactable = true;
+        }
+        else
+        {
+            buttonCadastrar.interactable = false;
+        }
     }
 }
