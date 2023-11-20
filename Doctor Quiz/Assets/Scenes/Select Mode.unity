@@ -755,7 +755,7 @@ GameObject:
   - component: {fileID: 765917653}
   - component: {fileID: 765917652}
   m_Layer: 5
-  m_Name: btnPauseGame
+  m_Name: btnBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
