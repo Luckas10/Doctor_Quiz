@@ -6,6 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Tela Inicial.unity
+    guid: 56012a3b4ed60a34cbf3aac7b4189386
+  - enabled: 1
+    path: Assets/Scenes/Login.unity
+    guid: ddb31db7f23b4554585c91cb42a97ea0
+  - enabled: 1
+    path: Assets/Scenes/Cadastro.unity
+    guid: 565216913cc75c54f9633cd27297cb0c
+  - enabled: 1
+    path: Assets/Scenes/Perfil.unity
+    guid: d92a0e540b7ed7c44adc36bafc77d487
+  - enabled: 1
     path: Assets/Scenes/Select Mode.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
@@ -14,15 +26,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Results.unity
     guid: 25600c06f28be8b4fb536f78cc61df76
-  - enabled: 1
-    path: Assets/Scenes/Login.unity
-    guid: ddb31db7f23b4554585c91cb42a97ea0
-  - enabled: 1
-    path: Assets/Scenes/Cadastro.unity
-    guid: 565216913cc75c54f9633cd27297cb0c
-  - enabled: 1
-    path: Assets/Scenes/Tela Inicial.unity
-    guid: 56012a3b4ed60a34cbf3aac7b4189386
   - enabled: 1
     path: Assets/Scenes/Dashboard.unity
     guid: 2eef6ecfde5eaca4c94ac9283f32ffd5
