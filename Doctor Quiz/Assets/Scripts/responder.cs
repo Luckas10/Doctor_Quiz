@@ -48,15 +48,15 @@ public class responder : MonoBehaviour
         // Verifica se o valor foi salvo corretamente
         if (id_usuario != -1)
         {
-            LoadQuestionsForUser(id_usuario);
-            totalQuestionsOfType = GetTipoQuestionsCount(id_usuario, tipoAtual);
-            if (totalQuestionsOfType > 0)
-            {
-                SetQuestion(currentQuestionIndex);
-            }
-            else
-            {
-                Debug.Log("Não há questões disponíveis para este usuário.");
+            try {
+                LoadQuestionsForUser(id_usuario);
+                totalQuestionsOfType = GetTipoQuestionsCount(id_usuario, tipoAtual);
+                if (totalQuestionsOfType > 0)
+                {
+                    SetQuestion(currentQuestionIndex);
+                }
+            } catch {
+                Debug.Log("Não há questões do tipo " + tipoAtual + " disponíveis para este usuário.");
             }
         }
         else
@@ -158,9 +158,8 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
 
-        txtProgress.text = answeredQuestionsOfType.ToString() + " / " + totalQuestionsOfType.ToString();
-
-        float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
+        txtProgress.text =(answeredQuestionsOfType + 1).ToString() + " / " + totalQuestionsOfType.ToString();
+        float progress = ((float)answeredQuestionsOfType + 1) / totalQuestionsOfType;
         progressLevel.value = progress;
 
         return totalQuestionsOfType;

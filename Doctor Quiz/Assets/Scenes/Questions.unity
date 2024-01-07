@@ -3111,6 +3111,7 @@ MonoBehaviour:
   txtProgress: {fileID: 1687870858}
   progressLevel: {fileID: 243847529}
   DataBaseName: ecg_app.db
+  PausePanel: {fileID: 822265597}
 --- !u!1 &1687870856
 GameObject:
   m_ObjectHideFlags: 0
