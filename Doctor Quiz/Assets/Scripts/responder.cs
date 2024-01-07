@@ -24,8 +24,8 @@ public class responder : MonoBehaviour
     private string pathToDB;
     private string imageDirectoryPath;
     private int questionsAnswered = 0;
-    public static int correctQuestions = 0; // Variável para contar as respostas corretas
-    public static string tipoAtual; // Armazena o tipo de questão atual
+    public static int correctQuestions = 0;
+    public static string tipoAtual;
 
     private int totalQuestionsOfType;
     private int id_usuario;
@@ -34,10 +34,10 @@ public class responder : MonoBehaviour
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
-        pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
+        ConnectionDB(); // Chame a função ConnectionDB para configurar o caminho do banco de dados
 
         // Recupera o valor de "id_usuario" usando PlayerPrefs
-        int id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
+        id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
         // Recupera a variável "questionType" usando PlayerPrefs
         tipoAtual = PlayerPrefs.GetString("QuestionType", "");
 
@@ -63,6 +63,26 @@ public class responder : MonoBehaviour
         }
     }
 
+    void ConnectionDB()
+    {
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
+        }
+        else
+        {
+            pathToDB = Application.persistentDataPath + "/" + DataBaseName;
+
+            if (!File.Exists(pathToDB))
+            {
+                WWW load = new WWW("jar:file://" + Application.dataPath + "!/assets/" + DataBaseName);
+                while (!load.isDone) { }
+
+                File.WriteAllBytes(pathToDB, load.bytes);
+            }
+        }
+    }
+
     void LoadQuestionsForUser(int userId)
     {
         questions = new List<Question>();
@@ -78,8 +98,8 @@ public class responder : MonoBehaviour
                     "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId " +
                     "WHERE q.tipo = @TipoAtual AND qu.id_questao IS NULL";
 
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId)); // Adicionar o parâmetro UserId
-                dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual)); // Adicionar o parâmetro TipoAtual
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
+                dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual));
 
                 using (SqliteDataReader reader = dbCmd.ExecuteReader())
                 {
@@ -90,7 +110,7 @@ public class responder : MonoBehaviour
                             id = reader.GetInt32(reader.GetOrdinal("id")),
                             questionText = reader["enunciado"].ToString(),
                             tipo = tipoAtual,
-                            questionImage = reader["caminho_imagem"].ToString(), // Obtém o caminho da imagem da tabela questoes
+                            questionImage = reader["caminho_imagem"].ToString(),
                             alternativa_a = reader["alternativa_a"].ToString(),
                             alternativa_b = reader["alternativa_b"].ToString(),
                             alternativa_c = reader["alternativa_c"].ToString(),
@@ -99,7 +119,6 @@ public class responder : MonoBehaviour
                         };
                         questions.Add(question);
 
-                        // Verifique se a questão já foi respondida pelo usuário
                         question.responded = reader["responded"] != DBNull.Value ?
                                           reader.GetInt32(reader.GetOrdinal("responded")) : 1;
                     }
@@ -109,6 +128,7 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
     }
+
     int GetTipoQuestionsCount(int userId, string tipo)
     {
         int totalQuestionsOfType = 0;
@@ -120,13 +140,11 @@ public class responder : MonoBehaviour
 
             using (SqliteCommand dbCmd = dbConnection.CreateCommand())
             {
-                // Consulta para contar todas as questões do tipo especificado
                 dbCmd.CommandText = "SELECT COUNT(*) FROM questoes WHERE tipo = @Tipo";
                 dbCmd.Parameters.Add(new SqliteParameter("@Tipo", tipo));
 
                 totalQuestionsOfType = Convert.ToInt32(dbCmd.ExecuteScalar());
 
-                // Consulta para contar as questões desse tipo já respondidas pelo usuário
                 dbCmd.CommandText = "SELECT COUNT(*) FROM questao_usuario qu " +
                                     "INNER JOIN questoes q ON qu.id_questao = q.id " +
                                     "WHERE qu.id_usuario = @UserId AND q.tipo = @Tipo";
@@ -138,7 +156,6 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
 
-        // Calcular e retornar o progresso com base no tipo atual
         float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
         progressLevel.value = progress;
 
@@ -154,10 +171,8 @@ public class responder : MonoBehaviour
 
             txtProgress.text = (questionsAnswered + 1).ToString() + " / " + totalQuestionsOfType.ToString();
 
-            // Atualize o progressLevel com base no tipo atual
-            GetTipoQuestionsCount(id_usuario, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
+            GetTipoQuestionsCount(id_usuario, tipoAtual);
 
-            // Exiba a pergunta e imagem
             questionText.text = currentQuestion.questionText;
 
             if (!string.IsNullOrEmpty(currentQuestion.questionImage))
@@ -170,28 +185,23 @@ public class responder : MonoBehaviour
                 questionImage.gameObject.SetActive(false);
             }
 
-            // Defina o texto dos botões de opção
             optionButtons[0].GetComponentInChildren<Text>().text = currentQuestion.alternativa_a;
             optionButtons[1].GetComponentInChildren<Text>().text = currentQuestion.alternativa_b;
             optionButtons[2].GetComponentInChildren<Text>().text = currentQuestion.alternativa_c;
             optionButtons[3].GetComponentInChildren<Text>().text = currentQuestion.alternativa_d;
 
-            // Remova todos os ouvintes do botão de confirmação
             confirmButton.onClick.RemoveAllListeners();
 
-            // Adicione um único ouvinte que chama a função ConfirmAnswer() com o índice da opção selecionada
             confirmButton.onClick.AddListener(() =>
             {
                 ConfirmAnswer(currentQuestionIndex);
             });
 
-            // Desabilite o botão de confirmação até que uma opção seja selecionada
             confirmButton.interactable = false;
         }
         else
         {
             Debug.Log("Todas as questões foram respondidas-SetQuestion.");
-            // Trate o caso em que todas as questões já foram respondidas.
         }
     }
 
@@ -200,7 +210,6 @@ public class responder : MonoBehaviour
         respostaUsuario = textResposta.text;
         confirmButton.interactable = true;
     }
-
 
     private void LoadImage(string imageName)
     {
@@ -231,13 +240,12 @@ public class responder : MonoBehaviour
                 Debug.Log("Resposta correta!");
                 correctQuestions++;
 
-                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1); // Substitua o segundo parâmetro pelo id do usuário atual
-
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
             }
             else
             {
                 Debug.Log("Resposta incorreta!");
-                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1); // Substitua o segundo parâmetro pelo id do usuário atual
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
             }
 
             questionsAnswered++;
@@ -245,7 +253,7 @@ public class responder : MonoBehaviour
 
             int nextUnansweredQuestionIndex = questionIndex + 1;
 
-            Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);//Questão atual id / total de questões
+            Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);
 
             if (nextUnansweredQuestionIndex < questions.Count)
             {
@@ -295,7 +303,6 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
     }
-
 
     [System.Serializable]
     public class Question

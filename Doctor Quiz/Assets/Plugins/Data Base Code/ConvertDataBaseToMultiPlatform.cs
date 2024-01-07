@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using System.IO;
 
 public class ConvertDataBaseToMultiPlatform : MonoBehaviour
@@ -7,49 +8,46 @@ public class ConvertDataBaseToMultiPlatform : MonoBehaviour
 
     public void Awake()
     {
-        GenerateConnectionString(DataBaseName+".db");
-        
+        GenerateConnectionString(DataBaseName + ".db");
     }
+
     public void GenerateConnectionString(string DatabaseName)
     {
 #if UNITY_EDITOR
         string dbPath = Application.dataPath + "/StreamingAssets/" + DatabaseName;
 #else
-        //check if file exists in Application.persistentDataPath
+        // Verifique se o arquivo existe em Application.persistentDataPath
         string filepath = Application.persistentDataPath + "/" + DatabaseName;
 
         if (!File.Exists(filepath) || new System.IO.FileInfo(filepath).Length == 0)
         {
-            // if it doesn't ->
-            // open StreamingAssets directory and load the db ->
+            // Se não existir, carregue de StreamingAssets e salve em persistentDataPath
+            string loadPath = "";
+
 #if UNITY_ANDROID
-                WWW loadDb = new WWW("jar:file://" + Application.dataPath + "!/assets/" + DatabaseName);  // this is the path to your StreamingAssets in android
-                while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
-                // then save to Application.persistentDataPath
-                File.WriteAllBytes(filepath, loadDb.bytes);
+            loadPath = "jar:file://" + Application.dataPath + "!/assets/" + DatabaseName;
 #elif UNITY_IOS
-                var loadDb = Application.dataPath + "/Raw/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
-                // then save to Application.persistentDataPath
-                File.Copy(loadDb, filepath);
-#elif UNITY_WP8
-                var loadDb = Application.dataPath + "/StreamingAssets/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
-                // then save to Application.persistentDataPath
-                File.Copy(loadDb, filepath);
-#elif UNITY_WINRT
-                var loadDb = Application.dataPath + "/StreamingAssets/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
-                // then save to Application.persistentDataPath
-                File.Copy(loadDb, filepath);
+            loadPath = Application.dataPath + "/Raw/" + DatabaseName;
+#elif UNITY_WP8 || UNITY_WINRT
+            loadPath = Application.dataPath + "/StreamingAssets/" + DatabaseName;
 #endif
+
+            UnityWebRequest www = UnityWebRequest.Get(loadPath);
+            www.SendWebRequest();
+
+            while (!www.isDone) { }
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                File.WriteAllBytes(filepath, www.downloadHandler.data);
+            }
+            else
+            {
+                Debug.LogError("Falha ao carregar o banco de dados: " + www.error);
+            }
         }
-        
+
         var dbPath = filepath;
 #endif
-        
-
-
     }
-
-
-
- 
 }
