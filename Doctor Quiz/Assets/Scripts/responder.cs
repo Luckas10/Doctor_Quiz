@@ -187,8 +187,6 @@ public class responder : MonoBehaviour
 
             optionButtons[0].GetComponentInChildren<Text>().text = currentQuestion.alternativa_a;
             optionButtons[1].GetComponentInChildren<Text>().text = currentQuestion.alternativa_b;
-            optionButtons[2].GetComponentInChildren<Text>().text = currentQuestion.alternativa_c;
-            optionButtons[3].GetComponentInChildren<Text>().text = currentQuestion.alternativa_d;
 
             confirmButton.onClick.RemoveAllListeners();
 
@@ -213,7 +211,36 @@ public class responder : MonoBehaviour
 
     private void LoadImage(string imageName)
     {
-        string imagePath = imageDirectoryPath + imageName;
+
+        string imagePath = "";
+
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            imagePath = Application.dataPath + "/StreamingAssets" + imageName;
+        }
+        else
+        {
+            imagePath = Application.persistentDataPath + imageName;
+
+            if (!File.Exists(imagePath))
+            {
+                string androidPath = "jar:file://" + Application.dataPath + "!/assets/" + imageName;
+                using (WWW load = new WWW(androidPath))
+                {
+                    while (!load.isDone) { }
+
+                    if (string.IsNullOrEmpty(load.error))
+                    {
+                        File.WriteAllBytes(imagePath, load.bytes);
+                    }
+                    else
+                    {
+                        Debug.LogError("Error loading image from Android assets: " + load.error);
+                    }
+                }
+            }
+        }
+
 
         if (File.Exists(imagePath))
         {
@@ -225,6 +252,8 @@ public class responder : MonoBehaviour
         else
         {
             Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
+            optionButtons[2].GetComponentInChildren<Text>().text = "Arquivo do db: " + pathToDB;
+            optionButtons[3].GetComponentInChildren<Text>().text = "Arquivo da imagem não encontrado: " + imagePath;
         }
     }
 
