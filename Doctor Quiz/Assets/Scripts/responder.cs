@@ -6,6 +6,8 @@ using System.IO;
 using Mono.Data.Sqlite;
 using System.Data;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using UnityEngine.Networking;
 
 public class responder : MonoBehaviour
 {
@@ -156,6 +158,8 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
 
+        txtProgress.text = answeredQuestionsOfType.ToString() + " / " + totalQuestionsOfType.ToString();
+
         float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
         progressLevel.value = progress;
 
@@ -169,8 +173,6 @@ public class responder : MonoBehaviour
             currentQuestionIndex = questionIndex;
             Question currentQuestion = questions[currentQuestionIndex];
 
-            txtProgress.text = (questionsAnswered + 1).ToString() + " / " + totalQuestionsOfType.ToString();
-
             GetTipoQuestionsCount(id_usuario, tipoAtual);
 
             questionText.text = currentQuestion.questionText;
@@ -178,7 +180,6 @@ public class responder : MonoBehaviour
             if (!string.IsNullOrEmpty(currentQuestion.questionImage))
             {
                 LoadImage(currentQuestion.questionImage);
-                questionImage.gameObject.SetActive(true);
             }
             else
             {
@@ -187,6 +188,8 @@ public class responder : MonoBehaviour
 
             optionButtons[0].GetComponentInChildren<Text>().text = currentQuestion.alternativa_a;
             optionButtons[1].GetComponentInChildren<Text>().text = currentQuestion.alternativa_b;
+            optionButtons[2].GetComponentInChildren<Text>().text = currentQuestion.alternativa_c;
+            optionButtons[3].GetComponentInChildren<Text>().text = currentQuestion.alternativa_d;
 
             confirmButton.onClick.RemoveAllListeners();
 
@@ -209,51 +212,52 @@ public class responder : MonoBehaviour
         confirmButton.interactable = true;
     }
 
+
     private void LoadImage(string imageName)
     {
-
         string imagePath = "";
 
         if (Application.platform != RuntimePlatform.Android)
         {
             imagePath = Application.dataPath + "/StreamingAssets" + imageName;
-        }
-        else
-        {
-            imagePath = Application.persistentDataPath + imageName;
-
-            if (!File.Exists(imagePath))
+            if (File.Exists(imagePath))
             {
-                string androidPath = "jar:file://" + Application.dataPath + "!/assets/" + imageName;
-                using (WWW load = new WWW(androidPath))
-                {
-                    while (!load.isDone) { }
+                byte[] imageData = File.ReadAllBytes(imagePath);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                
+                questionImage.gameObject.SetActive(true);
 
-                    if (string.IsNullOrEmpty(load.error))
-                    {
-                        File.WriteAllBytes(imagePath, load.bytes);
-                    }
-                    else
-                    {
-                        Debug.LogError("Error loading image from Android assets: " + load.error);
-                    }
-                }
+            }
+            else
+            {
+                questionImage.gameObject.SetActive(false);
+                Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
             }
         }
-
-
-        if (File.Exists(imagePath))
-        {
-            byte[] imageData = File.ReadAllBytes(imagePath);
-            Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(imageData);
-            questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-        }
         else
         {
-            Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
-            optionButtons[2].GetComponentInChildren<Text>().text = "Arquivo do db: " + pathToDB;
-            optionButtons[3].GetComponentInChildren<Text>().text = "Arquivo da imagem não encontrado: " + imagePath;
+            imagePath = Application.streamingAssetsPath + imageName;
+
+            // Se for Android, usa UnityWebRequest para carregar o arquivo
+            UnityWebRequest www = UnityWebRequest.Get(imagePath);
+            www.SendWebRequest();
+
+            while (!www.isDone) { }
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                // Carrega a imagem
+                byte[] imageData = www.downloadHandler.data;
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            }
+            else
+            {
+                Debug.LogError("Erro ao carregar imagem: " + www.error);
+            }
         }
     }
 
