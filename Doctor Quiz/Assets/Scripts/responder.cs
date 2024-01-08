@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using Mono.Data.Sqlite;
 using System.Data;
+using UnityEngine.SceneManagement;
+using System.Collections;
+using UnityEngine.Networking;
 
 public class responder : MonoBehaviour
 {
@@ -23,25 +26,62 @@ public class responder : MonoBehaviour
     private string pathToDB;
     private string imageDirectoryPath;
     private int questionsAnswered = 0;
-    public static int correctQuestions = 0; // Variável para contar as respostas corretas
-    public static string tipoAtual = "iniciante"; // Armazena o tipo de questão atual
+    public static int correctQuestions = 0;
+    public static string tipoAtual;
 
     private int totalQuestionsOfType;
+    private int id_usuario;
+    private string respostaUsuario;
 
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
-        pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
+        ConnectionDB(); // Chame a função ConnectionDB para configurar o caminho do banco de dados
 
-        LoadQuestionsForUser(4); // Carregue as questões para o usuário com ID 2. Substitua o primeiro parametro pelo id do usuario atual
-        totalQuestionsOfType = GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
-        if (totalQuestionsOfType > 0)
+        // Recupera o valor de "id_usuario" usando PlayerPrefs
+        id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
+        // Recupera a variável "questionType" usando PlayerPrefs
+        tipoAtual = PlayerPrefs.GetString("QuestionType", "");
+
+        Debug.Log(id_usuario);
+
+        // Verifica se o valor foi salvo corretamente
+        if (id_usuario != -1)
         {
-            SetQuestion(currentQuestionIndex);
+            try {
+                LoadQuestionsForUser(id_usuario);
+                totalQuestionsOfType = GetTipoQuestionsCount(id_usuario, tipoAtual);
+                if (totalQuestionsOfType > 0)
+                {
+                    SetQuestion(currentQuestionIndex);
+                }
+            } catch {
+                Debug.Log("Não há questões do tipo " + tipoAtual + " disponíveis para este usuário.");
+            }
         }
         else
         {
-            Debug.Log("Não há questões disponíveis para este usuário.");
+            Debug.Log("Erro ao obter o valor de id_usuario de PlayerPrefs.");
+        }
+    }
+
+    void ConnectionDB()
+    {
+        if (Application.platform != RuntimePlatform.Android)
+        {
+            pathToDB = Application.dataPath + "/StreamingAssets/" + DataBaseName;
+        }
+        else
+        {
+            pathToDB = Application.persistentDataPath + "/" + DataBaseName;
+
+            if (!File.Exists(pathToDB))
+            {
+                WWW load = new WWW("jar:file://" + Application.dataPath + "!/assets/" + DataBaseName);
+                while (!load.isDone) { }
+
+                File.WriteAllBytes(pathToDB, load.bytes);
+            }
         }
     }
 
@@ -60,8 +100,8 @@ public class responder : MonoBehaviour
                     "LEFT JOIN questao_usuario qu ON q.id = qu.id_questao AND qu.id_usuario = @UserId " +
                     "WHERE q.tipo = @TipoAtual AND qu.id_questao IS NULL";
 
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId)); // Adicionar o parâmetro UserId
-                dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual)); // Adicionar o parâmetro TipoAtual
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
+                dbCmd.Parameters.Add(new SqliteParameter("@TipoAtual", tipoAtual));
 
                 using (SqliteDataReader reader = dbCmd.ExecuteReader())
                 {
@@ -72,7 +112,7 @@ public class responder : MonoBehaviour
                             id = reader.GetInt32(reader.GetOrdinal("id")),
                             questionText = reader["enunciado"].ToString(),
                             tipo = tipoAtual,
-                            questionImage = reader["caminho_imagem"].ToString(), // Obtém o caminho da imagem da tabela questoes
+                            questionImage = reader["caminho_imagem"].ToString(),
                             alternativa_a = reader["alternativa_a"].ToString(),
                             alternativa_b = reader["alternativa_b"].ToString(),
                             alternativa_c = reader["alternativa_c"].ToString(),
@@ -81,9 +121,8 @@ public class responder : MonoBehaviour
                         };
                         questions.Add(question);
 
-                        // Verifique se a questão já foi respondida pelo usuário
-                       question.responded = reader["responded"] != DBNull.Value ?  
-                                         reader.GetInt32(reader.GetOrdinal("responded")) : 1;
+                        question.responded = reader["responded"] != DBNull.Value ?
+                                          reader.GetInt32(reader.GetOrdinal("responded")) : 1;
                     }
                 }
             }
@@ -91,6 +130,7 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
     }
+
     int GetTipoQuestionsCount(int userId, string tipo)
     {
         int totalQuestionsOfType = 0;
@@ -102,13 +142,11 @@ public class responder : MonoBehaviour
 
             using (SqliteCommand dbCmd = dbConnection.CreateCommand())
             {
-                // Consulta para contar todas as questões do tipo especificado
                 dbCmd.CommandText = "SELECT COUNT(*) FROM questoes WHERE tipo = @Tipo";
                 dbCmd.Parameters.Add(new SqliteParameter("@Tipo", tipo));
 
                 totalQuestionsOfType = Convert.ToInt32(dbCmd.ExecuteScalar());
 
-                // Consulta para contar as questões desse tipo já respondidas pelo usuário
                 dbCmd.CommandText = "SELECT COUNT(*) FROM questao_usuario qu " +
                                     "INNER JOIN questoes q ON qu.id_questao = q.id " +
                                     "WHERE qu.id_usuario = @UserId AND q.tipo = @Tipo";
@@ -120,10 +158,10 @@ public class responder : MonoBehaviour
             dbConnection.Close();
         }
 
-        // Calcular e retornar o progresso com base no tipo atual
-        float progress = (float)answeredQuestionsOfType / totalQuestionsOfType;
+        txtProgress.text =(answeredQuestionsOfType + 1).ToString() + " / " + totalQuestionsOfType.ToString();
+        float progress = ((float)answeredQuestionsOfType + 1) / totalQuestionsOfType;
         progressLevel.value = progress;
-        
+
         return totalQuestionsOfType;
     }
 
@@ -134,131 +172,169 @@ public class responder : MonoBehaviour
             currentQuestionIndex = questionIndex;
             Question currentQuestion = questions[currentQuestionIndex];
 
-            txtProgress.text = (questionsAnswered + 1).ToString() + " / " + totalQuestionsOfType.ToString();
+            GetTipoQuestionsCount(id_usuario, tipoAtual);
 
-            // Atualize o progressLevel com base no tipo atual
-            GetTipoQuestionsCount(4, tipoAtual); // USER ID SETADO COMO 1, mudei para 2. Substitua o primeiro parametro pelo id do usuario atual
-
-            // Exiba a pergunta e imagem
             questionText.text = currentQuestion.questionText;
 
             if (!string.IsNullOrEmpty(currentQuestion.questionImage))
             {
                 LoadImage(currentQuestion.questionImage);
-                questionImage.gameObject.SetActive(true);
             }
             else
             {
                 questionImage.gameObject.SetActive(false);
             }
 
-            // Defina o texto dos botões de opção
             optionButtons[0].GetComponentInChildren<Text>().text = currentQuestion.alternativa_a;
             optionButtons[1].GetComponentInChildren<Text>().text = currentQuestion.alternativa_b;
             optionButtons[2].GetComponentInChildren<Text>().text = currentQuestion.alternativa_c;
             optionButtons[3].GetComponentInChildren<Text>().text = currentQuestion.alternativa_d;
 
-            // Remova todos os ouvintes do botão de confirmação
             confirmButton.onClick.RemoveAllListeners();
 
-            // Adicione um único ouvinte que chama a função ConfirmAnswer() com o índice da opção selecionada
             confirmButton.onClick.AddListener(() =>
             {
                 ConfirmAnswer(currentQuestionIndex);
             });
 
-            // Desabilite o botão de confirmação até que uma opção seja selecionada
             confirmButton.interactable = false;
         }
         else
         {
             Debug.Log("Todas as questões foram respondidas-SetQuestion.");
-            // Trate o caso em que todas as questões já foram respondidas.
         }
     }
+
+    public void ButtonInteractable(Text textResposta)
+    {
+        respostaUsuario = textResposta.text;
+        confirmButton.interactable = true;
+    }
+
 
     private void LoadImage(string imageName)
     {
-        string imagePath = imageDirectoryPath + imageName;
+        string imagePath = "";
 
-        if (File.Exists(imagePath))
+        if (Application.platform != RuntimePlatform.Android)
         {
-            byte[] imageData = File.ReadAllBytes(imagePath);
-            Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(imageData);
-            questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            imagePath = Application.dataPath + "/StreamingAssets" + imageName;
+            if (File.Exists(imagePath))
+            {
+                byte[] imageData = File.ReadAllBytes(imagePath);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                
+                questionImage.gameObject.SetActive(true);
+
+            }
+            else
+            {
+                questionImage.gameObject.SetActive(false);
+                Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
+            }
         }
         else
         {
-            Debug.LogError("Arquivo da imagem não encontrado: " + imagePath);
+            imagePath = Application.streamingAssetsPath + imageName;
+
+            // Se for Android, usa UnityWebRequest para carregar o arquivo
+            UnityWebRequest www = UnityWebRequest.Get(imagePath);
+            www.SendWebRequest();
+
+            while (!www.isDone) { }
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                // Carrega a imagem
+                byte[] imageData = www.downloadHandler.data;
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                questionImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+            }
+            else
+            {
+                Debug.LogError("Erro ao carregar imagem: " + www.error);
+            }
         }
     }
 
-    void ConfirmAnswer(int questionIndex) {
-        if (questionIndex >= 0 && questionIndex < questions.Count) {
+    void ConfirmAnswer(int questionIndex)
+    {
+        id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
+        if (questionIndex >= 0 && questionIndex < questions.Count)
+        {
             Question currentQuestion = questions[questionIndex];
-            
-            if (optionButtons[0].GetComponentInChildren<Text>().text == currentQuestion.opcao_correta) {
-                Debug.Log("Resposta correta!");
-                correctQuestions++;  
-                
-                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
-                
-            } else {
-                Debug.Log("Resposta incorreta!");
-                InsertIntoQuestaoUsuario(currentQuestion.id, 4, 1); // Substitua o segundo parâmetro pelo id do usuário atual
-            }
-            
-            questionsAnswered++;
-            valueProgressLevel = (float)questionsAnswered / totalQuestionsOfType;  
-            
-            int nextUnansweredQuestionIndex = questionIndex + 1;
-            
-            Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);//Questão atual id / total de questões
 
-            if (nextUnansweredQuestionIndex < questions.Count) {
-                SetQuestion(nextUnansweredQuestionIndex);   
-            } else {
+            if (respostaUsuario == currentQuestion.opcao_correta)
+            {
+                Debug.Log("Resposta correta!");
+                correctQuestions++;
+
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
+            }
+            else
+            {
+                Debug.Log("Resposta incorreta!");
+                InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
+            }
+
+            questionsAnswered++;
+            valueProgressLevel = (float)questionsAnswered / totalQuestionsOfType;
+
+            int nextUnansweredQuestionIndex = questionIndex + 1;
+
+            Debug.Log(nextUnansweredQuestionIndex + "/" + questions.Count);
+
+            if (nextUnansweredQuestionIndex < questions.Count)
+            {
+                SetQuestion(nextUnansweredQuestionIndex);
+            }
+            else
+            {
                 Debug.Log("Todas as questões foram respondidas: " + nextUnansweredQuestionIndex + "/" + questions.Count);
                 Debug.Log("Questões corretas: " + correctQuestions + "/" + totalQuestionsOfType);
+                SceneManager.LoadScene("Results");
             }
 
-            while (nextUnansweredQuestionIndex < questions.Count &&  
-                questions[nextUnansweredQuestionIndex].responded > 0) {
-                nextUnansweredQuestionIndex++;    
+            while (nextUnansweredQuestionIndex < questions.Count &&
+                questions[nextUnansweredQuestionIndex].responded > 0)
+            {
+                nextUnansweredQuestionIndex++;
             }
         }
     }
 
-    void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded) {
-        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB)) 
+    void InsertIntoQuestaoUsuario(int questaoId, int userId, int responded)
+    {
+        using (SqliteConnection dbConnection = new SqliteConnection("URI=file:" + pathToDB))
         {
             dbConnection.Open();
-            
-            using (SqliteCommand dbCmd = dbConnection.CreateCommand()) 
+
+            using (SqliteCommand dbCmd = dbConnection.CreateCommand())
             {
                 dbCmd.CommandText = "INSERT INTO questao_usuario (id_questao, id_usuario, responded) " +
                     "VALUES (@QuestaoId, @UserId, @Responded)";
-                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));       
-                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));       
+                dbCmd.Parameters.Add(new SqliteParameter("@QuestaoId", questaoId));
+                dbCmd.Parameters.Add(new SqliteParameter("@UserId", userId));
                 dbCmd.Parameters.Add(new SqliteParameter("@Responded", responded));
-                
+
                 int rowsAffected = dbCmd.ExecuteNonQuery();
-                
-                if (rowsAffected > 0) 
+
+                if (rowsAffected > 0)
                 {
                     Debug.Log("Inserção na tabela questao_usuario bem-sucedida.");
                 }
-                else 
+                else
                 {
                     Debug.LogError("Falha ao inserir na tabela questao_usuario.");
                 }
             }
-            
-            dbConnection.Close();    
+
+            dbConnection.Close();
         }
     }
-
 
     [System.Serializable]
     public class Question
@@ -272,6 +348,6 @@ public class responder : MonoBehaviour
         public string alternativa_c;
         public string alternativa_d;
         public string opcao_correta;
-        public int responded; 
+        public int responded;
     }
 }

@@ -707,6 +707,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18dd328dbfecd834a9102d53a489ee7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonConfirmar: {fileID: 0}
+  CheckBox: {fileID: 0}
 --- !u!1 &1788211579
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,7 +875,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1707526457}
         m_TargetAssemblyTypeName: comandosBasicos, Assembly-CSharp
-        m_MethodName: LoadScenes
+        m_MethodName: LoadScene
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

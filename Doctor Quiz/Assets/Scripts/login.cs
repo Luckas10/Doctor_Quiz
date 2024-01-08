@@ -9,7 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class login : MonoBehaviour
 {
-
     public InputField EmailInput;
     public InputField PasswordInput;
     public string DataBaseName;
@@ -17,7 +16,6 @@ public class login : MonoBehaviour
 
     public void InsertLogin()
     {
-
         string _EmailInput = EmailInput.text.Trim();
         string _PasswordInput = PasswordInput.text.Trim();
         string conn = SetDataBaseClass.SetDataBase(DataBaseName + ".db");
@@ -28,14 +26,27 @@ public class login : MonoBehaviour
         dbcon = new SqliteConnection(conn);
         dbcon.Open();
         dbcmd = dbcon.CreateCommand();
+
+        // checa se existe o usuario
         string SQlQuery = "Select count(*) from usuarios where email='" + _EmailInput + "' and senha='" + _PasswordInput + "'";
         dbcmd.CommandText = SQlQuery;
         int result = Convert.ToInt32(dbcmd.ExecuteScalar());
 
         if (result > 0)
         {
+            // se existir, pega o id do usuario
+            SQlQuery = "Select id_usuario from usuarios where email='" + _EmailInput + "' and senha='" + _PasswordInput + "'";
+            dbcmd.CommandText = SQlQuery;
+            reader = dbcmd.ExecuteReader();
+            if (reader.Read())
+            {
+                int id_usuario = reader.GetInt32(0);
+                PlayerPrefs.SetInt("id_usuario", id_usuario);
+            }
+            reader.Close();
+
             LoginStatus.text = "Login realizado com sucesso";
-            SceneManager.LoadScene("Select Mode 1");
+            SceneManager.LoadScene("Dashboard");
         }
         else
         {
@@ -46,13 +57,5 @@ public class login : MonoBehaviour
         dbcmd = null;
         dbcon.Close();
         dbcon = null;
-
     }
-
-    public void LoadScenes(string cena)
-    {
-        SceneManager.LoadScene(cena);
-    }
-
-
 }
