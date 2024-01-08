@@ -1022,8 +1022,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 667208706}
-  - component: {fileID: 667208708}
-  - component: {fileID: 667208709}
   m_Layer: 0
   m_Name: App Manager
   m_TagString: Untagged
@@ -1046,36 +1044,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &667208708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667208704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a24772ffeda39ba4a8d7d6c0d052d3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DataBaseName: ecg_app.db
---- !u!114 &667208709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 667208704}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43fb1ca04a61f43419e0a2946563b011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonIniciante: {fileID: 99142185}
-  buttonIntermediario: {fileID: 166714879}
-  buttonAvancado: {fileID: 1013509177}
-  buttonExpert: {fileID: 1996783808}
-  DataBaseName: ecg_app.db
 --- !u!1 &765917650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,6 +1933,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonConfirmar: {fileID: 1838998105}
+  btnIniciante: {fileID: 99142185}
+  btnIntermediario: {fileID: 166714879}
+  btnAvancado: {fileID: 1013509177}
+  btnExpert: {fileID: 1996783808}
   CheckBox: {fileID: 0}
 --- !u!1 &1788211579
 GameObject:

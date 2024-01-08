@@ -51,7 +51,6 @@ public class responder : MonoBehaviour
             try {
                 LoadQuestionsForUser(id_usuario);
                 totalQuestionsOfType = GetTipoQuestionsCount(id_usuario, tipoAtual);
-                Debug.Log(totalQuestionsOfType);
                 if (totalQuestionsOfType > 0)
                 {
                     SetQuestion(currentQuestionIndex);
