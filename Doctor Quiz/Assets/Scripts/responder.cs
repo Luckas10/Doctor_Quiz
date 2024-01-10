@@ -33,6 +33,8 @@ public class responder : MonoBehaviour
     private int id_usuario;
     private string respostaUsuario;
 
+    private string[] ids_questoes;
+
     void Start()
     {
         imageDirectoryPath = Application.dataPath;
