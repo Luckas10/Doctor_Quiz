@@ -46,6 +46,9 @@ public class login : MonoBehaviour
             reader.Close();
 
             LoginStatus.text = "Login realizado com sucesso";
+
+            pontuacao.AddAmostras(DataBaseName);
+
             SceneManager.LoadScene("Dashboard");
         }
         else

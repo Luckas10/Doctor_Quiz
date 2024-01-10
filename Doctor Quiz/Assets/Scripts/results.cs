@@ -5,11 +5,14 @@ public class results : MonoBehaviour
 {
     public Text questionsCorrectText;
     public Text samples;
+    static private int questionsCorrect;
 
     void Start()
     {
-        int questionsCorrect = responder.correctQuestions;
+        questionsCorrect = responder.correctQuestions;
         questionsCorrectText.text = questionsCorrect.ToString();
         samples.text = (questionsCorrect * 40).ToString();
+
+        pontuacao.DataBaseAddAmostras("ecg_app", questionsCorrect * 40);
     }
 }

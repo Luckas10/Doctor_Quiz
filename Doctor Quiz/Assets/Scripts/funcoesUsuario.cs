@@ -57,7 +57,7 @@ public class funcoesUsuario : MonoBehaviour
         {
             dbcmd.ExecuteNonQuery();
             Debug.Log("Inserção bem-sucedida.");
-            LoadScenes("Login");
+            SceneManager.LoadScene("Login");
         }
         catch (System.Exception)
         {
@@ -69,11 +69,5 @@ public class funcoesUsuario : MonoBehaviour
         dbcon.Close();
         dbcon = null;
     }
-
-    public void LoadScenes(string cena)
-    {
-        SceneManager.LoadScene(cena);
-    }
-
 
 }
