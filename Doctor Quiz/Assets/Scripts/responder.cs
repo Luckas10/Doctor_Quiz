@@ -11,6 +11,17 @@ using UnityEngine.Networking;
 
 public class responder : MonoBehaviour
 {
+
+    public Text txtParabenizar;
+    public Text txtQuestaoCorreta;
+    public GameObject CorrecaoMenu; 
+    public Image BackgroundCorrecao;
+    public Image WaveImage;
+    public Button btnProximaQuestao;
+
+    static public bool verificadorResults = false;
+    private string letraCorreta;
+
     public Text questionText;
     public Image questionImage;
     public List<Button> optionButtons;
@@ -266,18 +277,89 @@ public class responder : MonoBehaviour
         id_usuario = PlayerPrefs.GetInt("id_usuario", -1);
         if (questionIndex >= 0 && questionIndex < questions.Count)
         {
+
             Question currentQuestion = questions[questionIndex];
+
+            if (currentQuestion.opcao_correta == currentQuestion.alternativa_a) {
+                letraCorreta = "a) ";
+            }
+            if (currentQuestion.opcao_correta == currentQuestion.alternativa_b) {
+                letraCorreta = "b) ";
+            }
+            if (currentQuestion.opcao_correta == currentQuestion.alternativa_c) {
+                letraCorreta = "c) ";
+            }
+            if (currentQuestion.opcao_correta == currentQuestion.alternativa_d) {
+                letraCorreta = "d) ";
+            }
 
             if (respostaUsuario == currentQuestion.opcao_correta)
             {
                 Debug.Log("Resposta correta!");
-                correctQuestions++;
+                Color corCorreta;
+                Color corDarkGreen;
+
+                // Exemplo de código hexadecimal (verde)
+                string codigoHexCorreta = "#C6FFC9";
+                string codigoHexDarkGreen = "#419142";
+
+                if (ColorUtility.TryParseHtmlString(codigoHexCorreta, out corCorreta))
+                {
+                    if (CorrecaoMenu != null)
+                    {
+                        txtParabenizar.text = "Parabéns, você acertou! Questão correta:";
+                        txtQuestaoCorreta.text = letraCorreta + currentQuestion.opcao_correta;
+                        BackgroundCorrecao.color = corCorreta;
+                        CorrecaoMenu.gameObject.SetActive(true);
+                        
+                        if (ColorUtility.TryParseHtmlString(codigoHexDarkGreen, out corDarkGreen))
+                        {
+                            WaveImage.color = corDarkGreen;
+                            btnProximaQuestao.image.color = corDarkGreen;
+                        }
+
+                        Time.timeScale = 0;
+                        correctQuestions++;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Código hexadecimal inválido: " + codigoHexCorreta);
+                }
 
                 InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
             }
             else
             {
                 Debug.Log("Resposta incorreta!");
+                Color corIncorreta;
+                Color corDarkRed;
+
+                // Exemplo de código hexadecimal (vermelho claro)
+                string codigoHexIncorreta = "#FFB3AE";
+                string codigoHexDarkRed = "#F66A72";
+
+                if (ColorUtility.TryParseHtmlString(codigoHexIncorreta, out corIncorreta))
+                {
+                    if (CorrecaoMenu != null)
+                    {
+                        txtParabenizar.text = "Que pena, você errou! Questão correta:";
+                        txtQuestaoCorreta.text = letraCorreta + currentQuestion.opcao_correta;
+                        BackgroundCorrecao.color = corIncorreta;
+                        if (ColorUtility.TryParseHtmlString(codigoHexDarkRed, out corDarkRed))
+                        {
+                            WaveImage.color = corDarkRed;
+                            btnProximaQuestao.image.color = corDarkRed;
+                        }
+                        CorrecaoMenu.gameObject.SetActive(true);
+                        Time.timeScale = 0;
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Código hexadecimal inválido: " + codigoHexIncorreta);
+                }
+
                 InsertIntoQuestaoUsuario(currentQuestion.id, id_usuario, 1);
             }
 
@@ -296,7 +378,7 @@ public class responder : MonoBehaviour
             {
                 Debug.Log("Todas as questões foram respondidas: " + nextUnansweredQuestionIndex + "/" + questions.Count);
                 Debug.Log("Questões corretas: " + correctQuestions + "/" + totalQuestionsOfType);
-                SceneManager.LoadScene("Results");
+                verificadorResults = true;
             }
 
             while (nextUnansweredQuestionIndex < questions.Count &&

@@ -170,7 +170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.5758057, y: -18.0685}
+  m_AnchoredPosition: {x: -1.5758057, y: -18.068604}
   m_SizeDelta: {x: -195.92, y: -384.4467}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &108428747
@@ -681,8 +681,8 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 10
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 720, y: 1280}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.2
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1780,6 +1780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonConfirmar: {fileID: 1838998105}
+  buttonProximaQuestao: {fileID: 0}
   CheckBox: {fileID: 0}
 --- !u!1 &1788211579
 GameObject:

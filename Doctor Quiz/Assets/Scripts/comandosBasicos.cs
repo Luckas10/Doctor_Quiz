@@ -8,6 +8,7 @@ public class comandosBasicos : MonoBehaviour
 {
     private string questionType;
     public Button buttonConfirmar;
+    public Button buttonProximaQuestao;
     public Toggle CheckBox;
 
     public void Start()
@@ -19,6 +20,14 @@ public class comandosBasicos : MonoBehaviour
         catch
         {
             
+        }
+    }
+
+    public void LoadSceneResponder() {
+        if (responder.verificadorResults == true) {
+            SceneManager.LoadScene("Results");
+        } else {
+            SceneManager.LoadScene("Questions");
         }
     }
 

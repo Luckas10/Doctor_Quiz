@@ -769,8 +769,8 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 10
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 720, y: 1280}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.2
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1424,7 +1424,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 360, y: 640}
-  m_SizeDelta: {x: 720, y: 1280}
+  m_SizeDelta: {x: 720, y: 1474.1501}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435907703
 MonoBehaviour:
@@ -1526,7 +1526,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.34552, y: -6.005371}
+  m_AnchoredPosition: {x: -18, y: -6.005371}
   m_SizeDelta: {x: 238.6909, y: 234.0107}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1482178325
@@ -1542,6 +1542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PausePanel: {fileID: 1482178323}
+  CorrecaoMenu: {fileID: 0}
 --- !u!114 &1482178326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1764,6 +1765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonConfirmar: {fileID: 0}
+  buttonProximaQuestao: {fileID: 0}
   CheckBox: {fileID: 0}
 --- !u!1 &1964908051
 GameObject:

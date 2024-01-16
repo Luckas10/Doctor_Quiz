@@ -735,6 +735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PausePanel: {fileID: 399136254}
+  CorrecaoMenu: {fileID: 0}
 --- !u!114 &399136257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,8 +1262,8 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 10
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 720, y: 1280}
-  m_ScreenMatchMode: 1
-  m_MatchWidthOrHeight: 0
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.2
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1965,6 +1966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonConfirmar: {fileID: 1838998105}
+  buttonProximaQuestao: {fileID: 0}
   CheckBox: {fileID: 0}
 --- !u!1 &1788211579
 GameObject:
