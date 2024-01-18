@@ -46,6 +46,9 @@ public class responder : MonoBehaviour
 
     void Start()
     {
+
+        verificadorResults = false;
+
         imageDirectoryPath = Application.dataPath;
         ConnectionDB(); // Chame a função ConnectionDB para configurar o caminho do banco de dados
 
