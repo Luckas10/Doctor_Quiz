@@ -14,5 +14,7 @@ public class results : MonoBehaviour
         samples.text = (questionsCorrect * 40).ToString();
 
         pontuacao.DataBaseAddAmostras("ecg_app", questionsCorrect * 40);
+
+        responder.correctQuestions = 0;
     }
 }
